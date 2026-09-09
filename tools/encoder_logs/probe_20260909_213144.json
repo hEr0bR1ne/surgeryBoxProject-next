@@ -1,0 +1,221 @@
+{
+  "command": "MOTOR:PROBE:F",
+  "initial_ticks": 14680,
+  "final": {
+    "home": "1",
+    "pos": "14680",
+    "low": "1745",
+    "high": "33146",
+    "stop": "1945",
+    "direction": "unknown",
+    "active": "0",
+    "pwm": "512",
+    "reason": "no_encoder_progress"
+  },
+  "records": [
+    {
+      "elapsed_s": 0.016,
+      "line": "[Serial CMD] Received: MOTOR:PROBE:F"
+    },
+    {
+      "elapsed_s": 0.016,
+      "line": "MOTOR:PROBE:F"
+    },
+    {
+      "elapsed_s": 0.016,
+      "line": "[Servo] Brake released"
+    },
+    {
+      "elapsed_s": 0.031,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 0.219,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 0.422,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.516,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.625,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 0.719,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 0.828,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.922,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.031,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 1.125,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.234,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.328,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 1.438,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 1.531,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.641,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.734,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 1.844,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.938,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.031,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 2.141,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 2.234,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.344,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.438,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 2.547,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.641,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.75,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 2.844,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 2.953,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 3.047,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 3.156,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 3.25,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 3.359,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 3.453,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 3.563,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 3.656,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 3.75,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 3.859,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 3.953,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 4.063,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 4.156,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 4.266,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 4.359,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 4.469,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 4.563,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 4.672,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 4.766,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 4.875,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    },
+    {
+      "elapsed_s": 4.969,
+      "line": "TRAVEL:home=1,pos=14680,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=512,reason=probing"
+    }
+  ]
+}

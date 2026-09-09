@@ -1597,7 +1597,7 @@ class StudentShell(QWidget):
             )
             return
 
-        port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM6")
+        port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM4")
         try:
             baudrate = int(os.getenv("SURGERYBOX_SERIAL_BAUD", "115200"))
         except ValueError:
@@ -4115,7 +4115,7 @@ class StudentShell(QWidget):
                 return
 
             from app.hardware.serial_connector import list_serial_ports
-            preferred_port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM6")
+            preferred_port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM4")
             baudrate = os.getenv("SURGERYBOX_SERIAL_BAUDRATE", "115200")
             ports = list_serial_ports()
             if ports:
@@ -4134,7 +4134,7 @@ class StudentShell(QWidget):
         try:
             transport = os.getenv("SURGERYBOX_HARDWARE_TRANSPORT", "serial").strip().lower()
             if transport == "serial":
-                port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM6")
+                port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM4")
                 baudrate = os.getenv("SURGERYBOX_SERIAL_BAUDRATE", "115200")
                 text = (
                     f"Serial mode: connect mannequin USB serial and camera to this PC. "
@@ -4225,7 +4225,7 @@ class StudentShell(QWidget):
             transport = os.getenv("SURGERYBOX_HARDWARE_TRANSPORT", "serial").strip().lower()
             if transport == "serial":
                 from app.hardware.serial_connector import SerialConnectionTestThread
-                port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM6")
+                port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM4")
                 try:
                     baudrate = int(os.getenv("SURGERYBOX_SERIAL_BAUDRATE", "115200"))
                 except ValueError:

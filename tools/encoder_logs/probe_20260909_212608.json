@@ -1,0 +1,141 @@
+{
+  "command": "MOTOR:PROBE:F",
+  "initial_ticks": 17580,
+  "final": {
+    "home": "1",
+    "pos": "17580",
+    "low": "1745",
+    "high": "33146",
+    "stop": "1945",
+    "direction": "unknown",
+    "active": "0",
+    "pwm": "300",
+    "reason": "no_encoder_progress"
+  },
+  "records": [
+    {
+      "elapsed_s": 0.0,
+      "line": "[Serial CMD] Received: MOTOR:PROBE:F"
+    },
+    {
+      "elapsed_s": 0.0,
+      "line": "MOTOR:PROBE:F"
+    },
+    {
+      "elapsed_s": 0.0,
+      "line": "[Servo] Brake released"
+    },
+    {
+      "elapsed_s": 0.015,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=300,reason=probing"
+    },
+    {
+      "elapsed_s": 0.203,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=300,reason=probing"
+    },
+    {
+      "elapsed_s": 0.422,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.515,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.625,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=300,reason=probing"
+    },
+    {
+      "elapsed_s": 0.718,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=300,reason=probing"
+    },
+    {
+      "elapsed_s": 0.828,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.922,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.031,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=1,pwm=300,reason=probing"
+    },
+    {
+      "elapsed_s": 1.125,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=0,pwm=300,reason=no_encoder_progress"
+    },
+    {
+      "elapsed_s": 1.234,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.328,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.437,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=0,pwm=300,reason=no_encoder_progress"
+    },
+    {
+      "elapsed_s": 1.531,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.64,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.734,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=0,pwm=300,reason=no_encoder_progress"
+    },
+    {
+      "elapsed_s": 1.843,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.937,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.031,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=0,pwm=300,reason=no_encoder_progress"
+    },
+    {
+      "elapsed_s": 2.14,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.234,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.343,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=0,pwm=300,reason=no_encoder_progress"
+    },
+    {
+      "elapsed_s": 2.437,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.547,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.64,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=0,pwm=300,reason=no_encoder_progress"
+    },
+    {
+      "elapsed_s": 2.75,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.843,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.953,
+      "line": "TRAVEL:home=1,pos=17580,low=1745,high=33146,stop=1945,direction=unknown,active=0,pwm=300,reason=no_encoder_progress"
+    }
+  ]
+}

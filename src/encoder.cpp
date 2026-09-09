@@ -5,6 +5,7 @@
 #define ENCODER_PIN_B D6
 
 volatile long encoderTicks = 0;
+static volatile long physicalEncoderTicks = 0;
 volatile unsigned long encoderEdgesA = 0;
 volatile unsigned long encoderEdgesB = 0;
 volatile uint8_t lastAB = 0;
@@ -13,12 +14,12 @@ volatile uint8_t lastAB = 0;
 float distancePerTick = 0.0000507;
 const int ENCODER_SIGN = -1; // Make the current catheter pull-out direction positive.
 
-static uint8_t readABState() {
+static uint8_t IRAM_ATTR readABState() {
     return (digitalRead(ENCODER_PIN_A) ? 0x02 : 0x00) |
            (digitalRead(ENCODER_PIN_B) ? 0x01 : 0x00);
 }
 
-static int8_t decodeQuadrature(uint8_t previous, uint8_t current) {
+static int8_t IRAM_ATTR decodeQuadrature(uint8_t previous, uint8_t current) {
     switch ((previous << 2) | current) {
         case 0b0001:
         case 0b0111:
@@ -43,7 +44,9 @@ static void IRAM_ATTR updateEncoderFromPins(bool edgeOnA) {
     }
 
     uint8_t currentAB = readABState();
-    encoderTicks += decodeQuadrature(lastAB, currentAB);
+    const int8_t step = decodeQuadrature(lastAB, currentAB);
+    encoderTicks += step;
+    physicalEncoderTicks += step;
     lastAB = currentAB;
 }
 
@@ -102,8 +105,8 @@ unsigned long readEncoderEdgesB() {
 }
 
 void resetEncoderDiagnostics() {
-    uint8_t currentAB = readABState();
     noInterrupts();
+    uint8_t currentAB = readABState();
     encoderTicks = 0;
     encoderEdgesA = 0;
     encoderEdgesB = 0;
@@ -114,4 +117,19 @@ void resetEncoderDiagnostics() {
 
 void resetEncoder() {
     resetEncoderDiagnostics();
+}
+
+long readPhysicalTicks() {
+    noInterrupts();
+    const long ticks = physicalEncoderTicks;
+    interrupts();
+    return ticks * ENCODER_SIGN;
+}
+
+void confirmPhysicalHome() {
+    noInterrupts();
+    physicalEncoderTicks = 0;
+    encoderTicks = 0;
+    lastAB = readABState();
+    interrupts();
 }

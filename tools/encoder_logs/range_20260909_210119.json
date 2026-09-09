@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "created_at": "20260909_210119",
+  "zero": "user_selected_position",
+  "max_ticks": 34891,
+  "min_ticks": 0,
+  "last_ticks": 91,
+  "samples": 2321,
+  "complete": true,
+  "distance_per_tick_m_unverified": 5.07e-05
+}

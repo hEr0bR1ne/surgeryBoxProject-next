@@ -1,0 +1,135 @@
+{
+  "initial_ticks": 18386,
+  "final": {
+    "home": "1",
+    "pos": "18386",
+    "low": "1745",
+    "high": "33146",
+    "stop": "1945",
+    "direction": "unknown",
+    "active": "0",
+    "reason": "probe_insufficient_feedback"
+  },
+  "records": [
+    {
+      "elapsed_s": 0.0,
+      "line": "[Serial CMD] Received: MOTOR:PROBE:R"
+    },
+    {
+      "elapsed_s": 0.0,
+      "line": "MOTOR:PROBE:R"
+    },
+    {
+      "elapsed_s": 0.0,
+      "line": "[Servo] Brake released"
+    },
+    {
+      "elapsed_s": 0.015,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=1,reason=probing"
+    },
+    {
+      "elapsed_s": 0.156,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=0,reason=probe_insufficient_feedback"
+    },
+    {
+      "elapsed_s": 0.484,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.578,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.671,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=0,reason=probe_insufficient_feedback"
+    },
+    {
+      "elapsed_s": 0.781,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.875,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 0.984,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=0,reason=probe_insufficient_feedback"
+    },
+    {
+      "elapsed_s": 1.078,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.187,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.281,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=0,reason=probe_insufficient_feedback"
+    },
+    {
+      "elapsed_s": 1.39,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.484,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.593,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=0,reason=probe_insufficient_feedback"
+    },
+    {
+      "elapsed_s": 1.687,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.796,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 1.89,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=0,reason=probe_insufficient_feedback"
+    },
+    {
+      "elapsed_s": 2.0,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.093,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.203,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=0,reason=probe_insufficient_feedback"
+    },
+    {
+      "elapsed_s": 2.296,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.406,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.5,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=0,reason=probe_insufficient_feedback"
+    },
+    {
+      "elapsed_s": 2.593,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.703,
+      "line": "TRAVEL?"
+    },
+    {
+      "elapsed_s": 2.796,
+      "line": "TRAVEL:home=1,pos=18386,low=1745,high=33146,stop=1945,direction=unknown,active=0,reason=probe_insufficient_feedback"
+    },
+    {
+      "elapsed_s": 2.906,
+      "line": "[Serial CMD] Received: TRAVEL?"
+    }
+  ]
+}

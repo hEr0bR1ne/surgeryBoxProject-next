@@ -7,9 +7,12 @@
 #include "config.h"
 #include "signal_tester.h"
 #include "imu_bridge.h"
+#include "blood_light.h"
 
 void setup() {
     Serial.begin(115200);
+    motorInit();            // Set driver outputs off before WiFi/HTTP startup.
+    bloodLightInit();
     Serial.println("[BOOT] SurgeryBox starting...");
     initWiFiHotspotUDP("surgeryBox", "12345678", 4210); // UDP mode
     initHttpEchoServer(); // HTTP /echo endpoint
@@ -17,7 +20,6 @@ void setup() {
     //initWiFiHotspot();      // Legacy TCP hotspot
     encoderInit();          // Encoder
     servoBrakeInit();       // Brake servo
-    motorInit();            // Motor
     eventsInit();           // Random distance arrays
     signalTesterInit();     // Serial-to-UDP passthrough
     // COM6 is now the primary training-control link. Keep the IMU transparent

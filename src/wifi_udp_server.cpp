@@ -5,6 +5,7 @@
 #include "encoder.h"
 #include "imu_bridge.h"
 #include "config.h"
+#include "blood_light.h"
 
 static String readDigitalPinsSnapshot() {
     const uint8_t pins[] = {D0, D1, D2, D3, D4, D5, D6, D7, D8};
@@ -105,12 +106,16 @@ static bool readIncomingSerial(String &msg) {
 }
 
 static bool readIncomingCommand(String &msg) {
-    if (readIncomingUDP(msg)) return true;
-    if (readIncomingSerial(msg)) return true;
-    return false;
+    if (!readIncomingUDP(msg) && !readIncomingSerial(msg)) return false;
+    // Light commands must not terminate a pending OK/OK1/OK2 or pull wait.
+    if (handleBloodLightCommand(msg)) return false;
+    if (handleBrakeCalibrationCommand(msg)) return false;
+    if (handleMotorSafetyCommand(msg)) return false;
+    return true;
 }
 
 static bool handleRuntimeControlCommand(const String& msg) {
+    if (handleMotorSafetyCommand(msg)) return true;
     if (msg == "Stop") {
         motorAbortWindBack();
         servoBrakeLock();
@@ -119,21 +124,21 @@ static bool handleRuntimeControlCommand(const String& msg) {
     }
     if (msg == "Winding") {
         motorStartWindBack();
-        sendUDPMessageToLast("ACK: Winding");
+        sendUDPMessageToLast(motorIsWindingBack() ? "ACK: Winding" : "ERROR: Winding rejected; query TRAVEL?");
         return true;
     }
     if (msg == "MF" || msg == "MotorForward") {
         motorAbortWindBack();
         servoBrakeRelease();
         motorForward();
-        sendUDPMessageToLast("ACK: MotorForward");
+        sendUDPMessageToLast("ERROR: direct motor drive disabled; use guarded commands");
         return true;
     }
     if (msg == "MR" || msg == "MotorReverse") {
         motorAbortWindBack();
         servoBrakeRelease();
         motorReverse();
-        sendUDPMessageToLast("ACK: MotorReverse");
+        sendUDPMessageToLast("ERROR: direct motor drive disabled; use guarded commands");
         return true;
     }
     if (msg == "MS" || msg == "MotorStop") {
@@ -161,6 +166,10 @@ static bool handleRuntimeControlCommand(const String& msg) {
         return true;
     }
     if (msg == "ZERO" || msg == "RSTENC" || msg == "RESET_ENC") {
+        if (motorIsWindingBack()) {
+            sendUDPMessageToLast("ERROR: ZERO requires idle motor");
+            return true;
+        }
         resetEncoderDiagnostics();
         sendUDPMessageToLast("ACK: ZERO");
         sendUDPMessageToLast(readEncoderSnapshot());
@@ -221,12 +230,18 @@ void handleHardwareCommand(const String& rawMsg, bool echo) {
     String msg = rawMsg;
     msg.trim();
     if (msg.length() == 0) return;
+    if (handleBloodLightCommand(msg)) return;
+    if (handleBrakeCalibrationCommand(msg)) return;
 
     if (echo) {
         sendUDPMessageToLast(msg);
     }
 
     if (msg == "Start") {
+        if (motorIsWindingBack()) {
+            sendUDPMessageToLast("ERROR: Start requires idle motor");
+            return;
+        }
         startEventSequence();
         sendUDPMessageToLast("ACK: Start");
     } else if (handleRuntimeControlCommand(msg)) {

@@ -1,3 +1,5 @@
+> 接手硬件与上位机开发：先读 [AI-HANDOFF.md](AI-HANDOFF.md)，再读本目录历史资料。
+
 # 文档目录
 
 这是 SurgeryBox Project 的文档索引。根目录 `README.md` 面向快速上手，本目录下的专题文档面向开发、调试和维护。

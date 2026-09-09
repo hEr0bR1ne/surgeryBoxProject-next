@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "board": "WEMOS D1 R1",
+  "gpio": 16,
+  "angles_deg": {
+    "release": 0,
+    "weak": 55,
+    "lock": 125
+  },
+  "measurement": "commanded_not_measured",
+  "created_at": "2026-09-09T18:07:11"
+}

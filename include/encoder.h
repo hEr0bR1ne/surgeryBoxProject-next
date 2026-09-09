@@ -11,5 +11,7 @@ unsigned long readEncoderEdgesA();
 unsigned long readEncoderEdgesB();
 void resetEncoderDiagnostics();
 void resetEncoder();
+long readPhysicalTicks();
+void confirmPhysicalHome();
 
 #endif

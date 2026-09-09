@@ -33,6 +33,7 @@ from app.hand_gesture_recognizer import HandGestureRecognizer
 from app.imu_posture_reader import ImuPostureThread
 from app.i18n import tr
 from app.training_records import get_training_record_manager
+from app.ui.blood_light_training import BloodLightTrainingMixin
 
 
 _SIMULATOR_DIR = Path(__file__).resolve().parents[1]
@@ -453,7 +454,7 @@ class TextDisplayWidget(QFrame):
             print(f"[TextDisplay] Error playing audio: {e}")
 
 
-class RemoveNeedleTraining(QWidget):
+class RemoveNeedleTraining(BloodLightTrainingMixin, QWidget):
     """
     拔针训练模块
     分为三个阶段：1.初始指导 2.按住针头 3.撕医用贴
@@ -474,7 +475,7 @@ class RemoveNeedleTraining(QWidget):
         if self.hardware_transport not in ("serial", "udp", "off"):
             self.hardware_transport = "serial"
         self.use_hardware_pull = os.getenv("SURGERYBOX_USE_HARDWARE_PULL", "1").strip().lower() not in ("0", "false", "no", "off")
-        self.serial_port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM6").strip() or "COM6"
+        self.serial_port = os.getenv("SURGERYBOX_SERIAL_PORT", "COM4").strip() or "COM4"
         try:
             self.serial_baudrate = int(os.getenv("SURGERYBOX_SERIAL_BAUDRATE", "115200"))
         except ValueError:
@@ -1745,6 +1746,9 @@ class RemoveNeedleTraining(QWidget):
     
     def _phase_3_wipe_blood_success(self):
         """血迹擦拭成功"""
+        if getattr(self, "_cleanup_done", False):
+            return
+        self._set_blood_light(False)
         if self.phase_transition_pending:
             return
         self.phase_transition_pending = True
@@ -1799,6 +1803,9 @@ class RemoveNeedleTraining(QWidget):
     
     def _start_phase_3_wipe_blood(self):
         """阶段3.5：擦拭血迹"""
+        if getattr(self, "_cleanup_done", False):
+            return
+        self._set_blood_light(True)
         self.current_phase = 2  # 保持为 Phase 2，但用新的 update 方法处理
         self.phase_transition_pending = False
         self.wipe_blood_start_time = time.time()
@@ -1902,7 +1909,7 @@ class RemoveNeedleTraining(QWidget):
                 print(f"[Phase 3.5] 松开了cotton，已完成 {self.blood_wipe_state['circles_completed']} 圈")
         
         # 绘制血迹（带消失动画）
-        if len(self.blood_stain_icons) >= 3:
+        if not self._uses_physical_blood() and len(self.blood_stain_icons) >= 3:
             for idx in range(3):
                 # 检查该血迹是否应该消失
                 if self.blood_wipe_state['blood_fade_start'][idx] is not None:
@@ -1992,6 +1999,8 @@ class RemoveNeedleTraining(QWidget):
     
     def _start_phase_4(self):
         """阶段4：拔针管（无硬件版本）"""
+        if getattr(self, "_cleanup_done", False):
+            return
         self.current_phase = 3
         self.phase_transition_pending = False
         self._phase4_complete_called = False
@@ -2189,6 +2198,8 @@ class RemoveNeedleTraining(QWidget):
 
     def _on_external_message(self, msg: str):
         """Apply MCU UDP telemetry to the camera training phase."""
+        if self._receive_blood_light(msg):
+            return
         print(f"[External] Received: {msg}")
         self.last_hardware_message_time = time.time()
         m = msg.lower().strip()
@@ -2808,6 +2819,7 @@ class RemoveNeedleTraining(QWidget):
     
     def cleanup(self):
         """清理资源"""
+        self._close_blood_light()
         try:
             if getattr(self, "_cleanup_done", False):
                 return

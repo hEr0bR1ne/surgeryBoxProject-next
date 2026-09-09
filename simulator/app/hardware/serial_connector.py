@@ -21,7 +21,7 @@ else:
 
 
 _EVENT_LINES = {"Pain", "Pain2", "HighDamp", "LowDamp", "Keep", "Start", "Stop", "Winding"}
-_PREFIX_RE = re.compile(r"^(ACK:|SEQ:|POS:|SPEED:|DIST:|PULL:|ENC:|PINS:|ERROR:|REWIND_)", re.IGNORECASE)
+_PREFIX_RE = re.compile(r"^(ACK:|SEQ:|POS:|SPEED:|DIST:|PULL:|ENC:|PINS:|LIGHT:|BRAKE:|ERROR:|REWIND_)", re.IGNORECASE)
 
 
 def is_protocol_line(text: str) -> bool:
@@ -64,8 +64,8 @@ class SerialHardwareListener(QThread):
 
         try:
             self._serial = serial.Serial(
-                self.port,
-                self.baudrate,
+                port=None,
+                baudrate=self.baudrate,
                 timeout=0.2,
                 write_timeout=0.5,
             )
@@ -77,9 +77,13 @@ class SerialHardwareListener(QThread):
                 self._serial.rts = False
             except Exception:
                 pass
+            self._serial.port = self.port
+            self._serial.open()
             # Many ESP8266 boards reset when the port opens. Give firmware a
             # short moment to boot before Start is sent by the training screen.
             time.sleep(1.2)
+            if self.stop_flag:
+                return
             self.ready = True
             self.connection_changed.emit(True, f"{self.port} @ {self.baudrate}")
 
@@ -113,6 +117,7 @@ class SerialHardwareListener(QThread):
 
     def stop(self):
         self.stop_flag = True
+        self.ready = False
         try:
             if self._serial:
                 self._serial.cancel_read()
