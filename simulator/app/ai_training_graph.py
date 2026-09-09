@@ -62,12 +62,13 @@ class TrainingAgentConfig:
 
         try:
             from app import ai_config_local as local_config
+        except ImportError:
+            from app import ai_config_example as local_config
 
-            api_key = getattr(local_config, "API_KEY", api_key) or api_key
-            base_url = getattr(local_config, "BASE_URL", base_url) or base_url
-            model = getattr(local_config, "MODEL", model) or model
-        except Exception:
-            pass
+        api_key = api_key or getattr(local_config, "API_KEY", "")
+        base_url = base_url or getattr(local_config, "BASE_URL", "")
+        model = (os.getenv("DASHSCOPE_MODEL") or os.getenv("OPENAI_MODEL")
+                 or getattr(local_config, "MODEL", "qwen-plus"))
 
         return cls(api_key=api_key, base_url=base_url, model=model, enable_llm=enable_llm)
 

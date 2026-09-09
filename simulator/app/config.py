@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 APP_NAME = "Simulation training for epidural analgesia nursing care"
-APP_VERSION = "Version 1.0"
-VERSION = "v1.0"
+APP_VERSION = "Next 0.1.0"
+VERSION = "next-0.1.0"
 
 PRIMARY_COLOR = "#4DA3FF"      # 蓝
 PRIMARY_LIGHT = "#D9EEFF"      # 淡蓝

@@ -1,4 +1,10 @@
 .pio
+.env
+.env.*
+!.env.example
+simulator/app/ai_config_local.py
+simulator/user_settings.json
+simulator/data/
 .conda_pkgs/
 .venv/
 .venv310/

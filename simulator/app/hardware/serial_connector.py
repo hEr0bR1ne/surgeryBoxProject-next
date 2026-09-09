@@ -7,6 +7,7 @@ import time
 from typing import List
 
 from PySide6.QtCore import QThread, Signal
+from app.hardware.serial_probe import probe_serial_connection
 
 try:
     import serial
@@ -154,22 +155,9 @@ class SerialConnectionTestThread(QThread):
                 except Exception:
                     pass
                 time.sleep(1.0)
-                ser.write(b"HELLO_PC\n")
-                ser.flush()
-                deadline = time.time() + 2.0
-                seen = []
-                while time.time() < deadline:
-                    raw = ser.readline()
-                    if not raw:
-                        continue
-                    text = raw.decode("utf-8", errors="replace").strip()
-                    if is_protocol_line(text):
-                        seen.append(text)
-                    if text == "ACK: HELLO_PC" or text.startswith("ACK:"):
-                        break
-                if seen:
-                    self.connection_result.emit(True, f"Serial connected on {self.port}: {', '.join(seen[:3])}")
+                if probe_serial_connection(ser):
+                    self.connection_result.emit(True, f"Serial connected on {self.port}: ACK: HELLO_PC")
                 else:
-                    self.connection_result.emit(True, f"Serial port {self.port} opened; no protocol reply yet")
+                    self.connection_result.emit(False, f"Serial port {self.port} opened, but MCU handshake timed out")
         except Exception as exc:
             self.connection_result.emit(False, f"Serial connection failed on {self.port}: {exc}")

@@ -1,3 +1,30 @@
+# SurgeryBox Next 0.1.0
+
+基于 [ZiliShao222/surgeryBoxProject](https://github.com/ZiliShao222/surgeryBoxProject) 的 `5d58073` 继续迭代；该工程继承自 [hEr0bR1ne/surgeryBoxProject](https://github.com/hEr0bR1ne/surgeryBoxProject) 的 `0187e78`（2.1.1）。
+
+请先阅读 [两版比较与迭代计划](docs/comparison-and-next.md)。本次修复串口连接误报成功，清理当前源码中的硬编码 AI 密钥和被跟踪缓存，并加入回归测试。保留师生界面、双语、IMU、相机与 AI 训练记忆等上游功能。
+
+AI 配置通过环境变量提供，示例（仅占位，需自行设置有效密钥）：
+
+```powershell
+$env:DASHSCOPE_API_KEY="YOUR_KEY"
+$env:DASHSCOPE_MODEL="qwen-plus"
+cd simulator
+python main.py
+```
+
+本地 `app/ai_config_local.py` 可从 `app/ai_config_example.py` 复制，不再纳入 Git。历史提交可能保留旧密钥，密钥持有人需要撤销旧密钥。
+
+开发检查（仓库根目录，无需连接设备）：
+
+```powershell
+python -m unittest discover -s tests -v
+python tools/check_python_sources.py
+```
+
+下方为上游功能与操作说明。实体设备、摄像头、IMU 与完整 GUI 训练流程仍需实际验证。
+
+---
 # SurgeryBox Project 文档入口
 
 本项目是一个面向硬膜外镇痛护理训练的软硬件一体化系统。它包含 ESP8266 外设固件、PySide6 桌面模拟训练端、拔除硬膜外导管的教学材料、题库练习、训练记录和 AI Nursing Mentor。
@@ -65,7 +92,7 @@ cd D:\surgeryBoxProject\simulator
 pip install -r requirements.txt
 ```
 
-AI Nursing Mentor 还需要 `openai` SDK；当前 `requirements.txt` 尚未列出它。
+AI Nursing Mentor 使用 `openai` SDK；当前 `requirements.txt` 已包含它。
 
 ```powershell
 pip install openai
@@ -111,11 +138,11 @@ python udp_flow_tester.py --mcu-ip 192.168.4.1 --mcu-port 4210 --local-port 4211
 ## 当前重要注意事项
 
 - 当前仓库没有统一交付版说明，`docs/` 是本次整理后的维护入口。
-- `simulator/app/ai_config_local.py` 当前被 Git 跟踪，而且文件里存在 API Key 形态的密钥。建议立即轮换密钥，并改为只通过环境变量 `DASHSCOPE_API_KEY` 提供。
-- `simulator/requirements.txt` 没有包含 `openai`，但 AI Mentor 代码会导入 `openai.OpenAI`。
+- Next 已停止跟踪本地 AI 配置，示例配置只读取环境变量。历史中的旧密钥需要由持有人撤销。
+- `simulator/requirements.txt` 已包含 `openai`、`langgraph` 和 `pyserial`。
 - `include/wifi_server.txt` 和 `src/wifi_server.txt` 是旧 TCP 方案，当前主流程使用 UDP。
 - `simulator/data/UDP_Test.py` 仍测试 `TestFlow`，但当前固件 `runTestFlow()` 已禁用，UDP handler 也没有处理 `TestFlow`。
-- 当前工作区已有未提交/未跟踪文件，本次文档整理只新增文档，不处理代码和数据文件。
+- 本次迭代范围和验证结果见 `docs/comparison-and-next.md`。
 
 ## 推荐阅读顺序
 
