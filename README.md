@@ -1,6 +1,6 @@
 # SurgeryBox Next 0.1.0
 
-**接手开发 / 使用 AI 阅读：请先看 [硬件与上位机交接](docs/AI-HANDOFF.md) 和 [AGENTS.md](AGENTS.md)。** 包含最新接线、舵机和编码器标定、已测/未测范围、电机异常及后续任务。最后确认的实物板上是常转测试固件，不是保护主程序；完整联调前先核实并恢复固件。
+**接手开发 / 使用 AI 阅读：请先看 [硬件与上位机交接](docs/AI-HANDOFF.md) 和 [AGENTS.md](AGENTS.md)。** 包含最新接线、舵机和编码器标定、已测/未测范围、电机异常及后续任务。2026-09-09 已恢复保护主程序并完成串口状态核对；机械零点和电机方向未确认，电机故障及完整联调仍待解决。
 
 基于 [ZiliShao222/surgeryBoxProject](https://github.com/ZiliShao222/surgeryBoxProject) 的 `5d58073` 继续迭代；该工程继承自 [hEr0bR1ne/surgeryBoxProject](https://github.com/hEr0bR1ne/surgeryBoxProject) 的 `0187e78`（2.1.1）。
 
