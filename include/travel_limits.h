@@ -15,8 +15,20 @@ constexpr unsigned long MOTOR_MAX_MS = 15000;
 
 enum class TravelStop { None, Boundary, WrongWay, NoFeedback, Timeout, ProbeDone, ClutchMoved };
 
-constexpr int motorPwmHighDuty(bool reverse, int drive) {
-    return reverse ? 1023 - drive : drive;
+// Matrix inputs: 0=LOW, 1=PWM, 2=HIGH. No direction inferred.
+constexpr int matrixDuty(int input, int pwm) { return input == 0 ? 0 : input == 2 ? 1023 : pwm; }
+constexpr unsigned long matrixDuration(int combination, unsigned long requested) {
+    return (combination == 2 || combination == 6) && requested > 200 ? 200 : requested;
+}
+constexpr TravelStop checkMatrix(long position, long start, unsigned long elapsed, unsigned long duration) {
+    return position <= TRAVEL_STOP || position > TRAVEL_HIGH ? TravelStop::Boundary :
+        elapsed >= duration || elapsed >= PROBE_MS || position - start >= 150 || start - position >= 150
+            ? TravelStop::ProbeDone : TravelStop::None;
+}
+
+constexpr int motorPwmHighDuty(bool /*reverse*/, int drive) {
+    // User-requested comparison: identical positive IN2 PWM in both directions.
+    return drive;
 }
 
 constexpr TravelStop checkJog(bool reverse, long position, long start, long best,

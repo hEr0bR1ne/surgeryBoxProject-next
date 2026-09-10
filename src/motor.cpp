@@ -18,6 +18,7 @@ static unsigned long progressA = 0, progressB = 0;
 static long progressTicks = 0;
 static int drivePwm = 300;
 static unsigned long probeDurationMs = PROBE_MS;
+static int matrixCombination = -1;
 static const char* reason = "boot_unreferenced";
 
 static void report() {
@@ -26,7 +27,8 @@ static void report() {
         ",high=" + String(TRAVEL_HIGH) + ",stop=" + String(TRAVEL_STOP) +
         ",direction=" + String(directionKnown ? (rewindUsesReverse ? "R" : "F") : "unknown") +
         ",active=" + String(active ? 1 : 0) + ",pwm=" + String(drivePwm) +
-        ",control=dir_pwm_v1,reason=" + reason);
+        ",control=dir_pwm_v1,pwm_mode=same_positive,matrix=1,combo=" + String(matrixCombination) +
+        ",duration_ms=" + String(probeDurationMs) + ",reason=" + reason);
 }
 
 void motorStop() {
@@ -56,7 +58,7 @@ void motorInit() {
     Serial.println("[Motor] Guarded mode; confirm physical home, then direction probe");
 }
 
-static bool begin(bool probe, bool reverse) {
+static bool begin(bool probe, bool reverse, int combination = -1) {
     if (active) { sendUDPMessageToLast("ERROR: motor already active"); return false; }
     const long pos = readPhysicalTicks();
     if (!referenced) { stopWith("home_required"); return false; }
@@ -68,6 +70,7 @@ static bool begin(bool probe, bool reverse) {
     if (!probe && !directionKnown) { stopWith("direction_probe_required"); return false; }
     if (probe) directionKnown = false;
     probing = probe;
+    matrixCombination = combination;
     probeReverse = reverse;
     startTicks = bestTicks = lastTicks = pos;
     startA = readEncoderEdgesA(); startB = readEncoderEdgesB();
@@ -76,16 +79,19 @@ static bool begin(bool probe, bool reverse) {
     servoBrakeRelease();
     active = true;
     reason = probe ? "probing" : "rewinding";
-    // AIN1 is direction; AIN2 always carries PWM. Reverse drive occurs
-    // during IN2 LOW (IN1=IN2=HIGH is brake), so invert the high duty.
+    // User-requested comparison: only AIN1 direction changes; AIN2 uses
+    // the identical positive PWM value for F and R (no duty inversion).
     // Establish 11 before reverse PWM, avoiding a full reverse start pulse.
-    if (reverse) {
+    if (combination >= 0) {
+        analogWrite(D7, matrixDuty(combination / 3, drivePwm));
+        analogWrite(D8, matrixDuty(combination % 3, drivePwm));
+    } else if (reverse) {
         digitalWrite(D8, HIGH);
         digitalWrite(D7, HIGH);
     } else {
         digitalWrite(D7, LOW);
     }
-    analogWrite(D8, motorPwmHighDuty(reverse, drivePwm));
+    if (combination < 0) analogWrite(D8, motorPwmHighDuty(reverse, drivePwm));
     report();
     return true;
 }
@@ -103,6 +109,16 @@ void motorUpdateWindBack() {
     const unsigned long now = millis();
     const long pos = readPhysicalTicks();
     const unsigned long edgeA = readEncoderEdgesA(), edgeB = readEncoderEdgesB();
+    if (matrixCombination >= 0) {
+        const auto result = checkMatrix(pos, startTicks, now - startMs, probeDurationMs);
+        if (result != TravelStop::None) {
+            directionKnown = false;
+            stopWith(result == TravelStop::Boundary ? "travel_stop" : "matrix_complete");
+        } else if (now - reportMs >= 100) {
+            reportMs = now; report();
+        }
+        return;
+    }
     if ((probing && pos != lastTicks) ||
         (!probing && pos <= progressTicks - 4 && edgeA != progressA && edgeB != progressB)) {
         progressMs = now;
@@ -144,6 +160,24 @@ void motorUpdateWindBack() {
 
 bool handleMotorSafetyCommand(const String& command) {
     if (command == "TRAVEL?") { report(); return true; }
+    if (command.startsWith("MOTOR:MATRIX:")) {
+        const String value = command.substring(15);
+        bool valid = command.length() >= 18 && command.charAt(14) == ':' &&
+            command.charAt(13) >= '0' && command.charAt(13) <= '8' && value.length() <= 4;
+        for (unsigned int i = 0; i < value.length(); ++i)
+            if (value[i] < '0' || value[i] > '9') valid = false;
+        const long duration = value.toInt();
+        if (!valid || duration < 100 || duration > 2000) {
+            sendUDPMessageToLast("ERROR: use MOTOR:MATRIX:0..8:100..2000");
+        } else if (active) {
+            sendUDPMessageToLast("ERROR: motor already active");
+        } else {
+            const int combination = command.charAt(13) - '0';
+            probeDurationMs = matrixDuration(combination, duration);
+            begin(true, false, combination);
+        }
+        return true;
+    }
     if (command.startsWith("MOTOR:PWM:")) {
         if (active || sequenceRunning) {
             sendUDPMessageToLast("ERROR: PWM change requires idle motor and training");

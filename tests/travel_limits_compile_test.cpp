@@ -1,7 +1,16 @@
 #include "travel_limits.h"
+static_assert(matrixDuty(0, 512) == 0 && matrixDuty(1, 512) == 512 && matrixDuty(2, 512) == 1023, "Matrix levels");
+static_assert(matrixDuration(2, 2000) == 200 && matrixDuration(6, 2000) == 200, "Full drive capped");
+static_assert(matrixDuration(1, 2000) == 2000, "PWM requested time");
+static_assert(checkMatrix(17000,17000,200,200) == TravelStop::ProbeDone, "Matrix autonomous deadline");
+static_assert(checkMatrix(16850,17000,20,2000) == TravelStop::ProbeDone, "Matrix inward delta cap");
+static_assert(checkMatrix(17150,17000,20,2000) == TravelStop::ProbeDone, "Matrix outward delta cap");
+static_assert(checkMatrix(1945,2000,200,200) == TravelStop::Boundary, "Matrix lower priority");
+static_assert(checkMatrix(33147,33000,10,200) == TravelStop::Boundary, "Matrix upper bound");
 
 static_assert(motorPwmHighDuty(false, 300) == 300, "Forward high duty");
-static_assert(motorPwmHighDuty(true, 300) == 723, "Reverse drive uses LOW portion");
+static_assert(motorPwmHighDuty(true, 300) == 300, "Reverse retains identical positive PWM");
+static_assert(motorPwmHighDuty(false, 700) == motorPwmHighDuty(true, 700), "Direction does not change PWM duty");
 static_assert(checkJog(true, 17000, 17000, 17000, 499, 500) == TravelStop::None, "Clutch no-motion is expected");
 static_assert(checkJog(true, 17000, 17000, 17000, 500, 500) == TravelStop::ProbeDone, "Firmware owns requested deadline");
 static_assert(checkJog(false, 17000, 17000, 17000, 100, 100) == TravelStop::ProbeDone, "Shortest deadline without GUI");

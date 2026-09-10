@@ -10,7 +10,7 @@ app = QApplication.instance() or QApplication([])
 
 def state(pos=17000, home=1, active=0, pwm=512, reason='home_confirmed'):
     return (f'TRAVEL:home={home},pos={pos},low=1745,high=33146,stop=1945,'
-            f'direction=unknown,active={active},pwm={pwm},control=dir_pwm_v1,reason={reason}')
+            f'direction=unknown,active={active},pwm={pwm},control=dir_pwm_v1,matrix=1,reason={reason}')
 
 
 class Tests(unittest.TestCase):
@@ -39,9 +39,9 @@ class Tests(unittest.TestCase):
         self.w.duration.setValue(100)
         self.w.run()
         self.w.handle_line(state(reason='pwm_set_probe_required'))
-        self.assertEqual(self.sent[-1], 'MOTOR:JOG:R:100')
+        self.assertEqual(self.sent[-1], 'MOTOR:MATRIX:3:100')
         self.w.handle_line(state(active=1, reason='probing'))
-        self.w.handle_line(state(reason='clutch_jog_complete'))
+        self.w.handle_line(state(reason='matrix_complete'))
         self.assertEqual(self.w.history[-1]['delta_ticks'], 0)
         self.assertIsNone(self.w.run_record)
 
@@ -82,9 +82,9 @@ class Tests(unittest.TestCase):
         self.w.handle_line(state(reason='pwm_set_probe_required', pwm=300))
         self.assertEqual(len(self.sent), 1)
         self.w.handle_line(state(reason='pwm_set_probe_required'))
-        self.assertEqual(self.sent[-1], 'MOTOR:JOG:F:500')
+        self.assertEqual(self.sent[-1], 'MOTOR:MATRIX:1:200')
         self.w.handle_line(state(reason='pwm_set_probe_required'))
-        self.assertEqual(self.sent.count('MOTOR:JOG:F:500'), 1)
+        self.assertEqual(self.sent.count('MOTOR:MATRIX:1:200'), 1)
         self.w.handle_line(state(active=1, reason='probing'))
         self.w.handle_line(state(pos=16850, reason='probe_complete'))
         self.assertEqual(self.w.history[-1]['delta_ticks'], -150)
@@ -92,19 +92,43 @@ class Tests(unittest.TestCase):
         self.assertIn('probe_complete', self.w.log.toPlainText())
         self.assertFalse(self.w.stop_timer.isActive())
 
+    def test_all_nine_combinations_and_full_drive_time_cap(self):
+        self.assertEqual({self.w.direction.itemData(i) for i in range(9)}, set('012345678'))
+        for combo in ('2', '6'):
+            self.w.direction.setCurrentIndex(self.w.direction.findData(combo))
+            self.w.duration.setValue(2000)
+            self.w.run()
+            self.w.handle_line(state(reason='pwm_set_probe_required'))
+            self.assertEqual(self.sent[-1], f'MOTOR:MATRIX:{combo}:200')
+            self.w.handle_line(state(active=1, reason='probing'))
+            self.w.handle_line(state(reason='matrix_complete'))
+            self.assertEqual(self.w.history[-1]['combination'], int(combo))
+
     def test_stop_source_visible(self):
         self.w.stop('设定时间到达')
         self.assertIn('停止来源：设定时间到达', self.w.log.toPlainText())
 
+    def test_reverse_pin_readback_records_stop_race_without_false_diagnosis(self):
+        self.w.direction.setCurrentIndex(1)
+        self.w.run()
+        self.w.handle_line(state(reason='pwm_set_probe_required'))
+        self.w.handle_line(state(active=1, reason='probing'))
+        self.assertEqual(self.sent[-1], 'PINS?')
+        self.w.handle_line('PINS:D7=1,D8=0')
+        self.assertEqual(self.w.run_record['input_pin_samples'][-1]['d7'], 1)
+        self.w.handle_line('PINS:D7=0,D8=1')
+        self.assertNotIn('MS', self.sent)
+        self.assertEqual(self.w.run_record['input_pin_samples'][-1]['d8'], 1)
+
     def test_stop_cancels_late_ack(self):
         self.w.run(); self.w.stop()
         self.w.handle_line(state(reason='pwm_set_probe_required'))
-        self.assertFalse(any(s.startswith('MOTOR:JOG:') for s in self.sent))
+        self.assertFalse(any(s.startswith('MOTOR:MATRIX:') for s in self.sent))
 
     def test_moving_while_applying_rejects_probe(self):
         self.w.run()
         self.w.handle_line(state(pos=17100, reason='pwm_set_probe_required'))
-        self.assertFalse(any(s.startswith('MOTOR:JOG:') for s in self.sent))
+        self.assertFalse(any(s.startswith('MOTOR:MATRIX:') for s in self.sent))
 
     def test_home_requires_explicit_check(self):
         self.w.home(); self.assertEqual(self.sent, [])

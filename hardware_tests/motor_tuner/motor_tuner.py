@@ -24,7 +24,7 @@ def parse_state(line):
                 or (s['low'], s['high'], s['stop']) != (1745, 33146, 1945)
                 or not 300 <= s['pwm'] <= 700
                 or s['direction'] not in ('F', 'R', 'unknown')
-                or s.get('control') != 'dir_pwm_v1'):
+                or s.get('control') != 'dir_pwm_v1' or s.get('matrix') != '1'):
             return None
         s['reason']  # Require a complete status, not a command echo.
         return s
@@ -76,7 +76,7 @@ class MotorTuner(QWidget):
         self.export_button.clicked.connect(self.export)
         row.addWidget(self.export_button)
         layout.addLayout(row)
-        self.connection_label = QLabel('未连接。需烧录新版方向＋PWM保护主程序；常转程序和旧版固件不支持本工具。')
+        self.connection_label = QLabel('未连接。需烧录新版输入组合保护主程序；常转程序和旧版固件不支持本工具。')
         self.connection_label.setWordWrap(True)
         layout.addWidget(self.connection_label)
         status = QGroupBox('实时状态')
@@ -99,14 +99,16 @@ class MotorTuner(QWidget):
         controls = QGroupBox('单次试转 · 改数值不会自动运行')
         box = QVBoxLayout(controls)
         row = QHBoxLayout()
-        row.addWidget(QLabel('方向'))
+        row.addWidget(QLabel('输入组合'))
         self.direction = QComboBox()
-        self.direction.addItem('正转 F：回卷线盘（D7 低 / D8 PWM）', 'F')
-        self.direction.addItem('反转 R：脱离离合器（D7 高 / D8 PWM）', 'R')
+        for combo in (1, 3, 5, 7, 0, 8, 4, 2, 6):
+            levels = ('低', 'PWM', '高')
+            suffix = '（全驱动，最多200ms）' if combo in (2, 6) else ''
+            self.direction.addItem(f'{combo}: AIN1={levels[combo//3]} / AIN2={levels[combo%3]} {suffix}', str(combo))
         row.addWidget(self.direction, 1)
         row.addWidget(QLabel('运行时间'))
         self.duration = QSpinBox(); self.duration.setRange(100, 2000)
-        self.duration.setSingleStep(100); self.duration.setValue(500)
+        self.duration.setSingleStep(100); self.duration.setValue(200)
         self.duration.setSuffix(' ms'); row.addWidget(self.duration)
         box.addLayout(row)
         row = QHBoxLayout(); row.addWidget(QLabel('PWM 输出'))
@@ -119,8 +121,8 @@ class MotorTuner(QWidget):
         self.pwm.valueChanged.connect(lambda v: self.percent.setText(f'{100*v/1023:.1f}%'))
         row.addWidget(self.slider, 1); row.addWidget(self.pwm); row.addWidget(self.percent)
         box.addLayout(row)
-        note = QLabel('正转回卷；反转脱离离合器，不是放线。数值是驱动占空比，不是实测转速或力度。\n'
-                      '固件按所选时长停止（最多2秒）；正转最多150计数，反转移动8计数即停。')
+        note = QLabel('选择组合逐项测试；高/低组合为全驱动，PWM滑块对它无效。\n'
+                      '普通组合最多2秒；高/低组合最多200ms；任一方向位移150计数提前停。')
         note.setWordWrap(True); box.addWidget(note)
         row = QHBoxLayout()
         self.run_button = QPushButton('点动一次')
@@ -237,7 +239,7 @@ class MotorTuner(QWidget):
         if not (self.fresh() and self.state['home'] and not self.state['active']
                 and not self.pending and not self.run_record and 14000 <= self.state['pos'] <= 20000): return
         self.pending = dict(direction=self.direction.currentData(), pwm=self.pwm.value(),
-                            duration_ms=self.duration.value(), queued=time.monotonic(),
+                            duration_ms=min(self.duration.value(), 200) if self.direction.currentData() in ('2', '6') else self.duration.value(), queued=time.monotonic(),
                             start_ticks=self.state['pos'])
         if not self.send(f"MOTOR:PWM:{self.pending['pwm']}"):
             self.pending = None
@@ -269,10 +271,23 @@ class MotorTuner(QWidget):
             self.handle_line(raw.decode('utf-8', errors='replace').strip())
 
     def handle_line(self, line):
+        if line.startswith('PINS:') and self.run_record and self.state and self.state['active']:
+            try:
+                pins = dict(item.split('=', 1) for item in line[5:].split(','))
+                d7, d8 = int(pins['D7']), int(pins['D8'])
+                if d7 not in (0, 1) or d8 not in (0, 1): raise ValueError('invalid pin level')
+                sample = dict(time=datetime.now().isoformat(timespec='milliseconds'), d7=d7, d8=d8)
+                samples = self.run_record.setdefault('input_pin_samples', [])
+                if not samples:
+                    self.log_message(f'引脚瞬时读回：D7={d7}、D8={d8}；PWM脚瞬时0/1不代表占空比或轴转向。')
+                samples.append(sample)
+            except (ValueError, KeyError):
+                self.log_message('无法解析方向脚回执：' + line)
+            return
         if line == 'ACK: HELLO_PC': self.handshake = True
         if line.startswith(('MOTOR_CONTINUOUS:', 'MOTOR_DIR_PWM:')) or (
-                line.startswith('TRAVEL:home=') and 'control=dir_pwm_v1' not in line):
-            self.disconnect('固件不兼容：请先烧录新版方向＋PWM保护主程序；常转固件需断24V停止。')
+                line.startswith('TRAVEL:home=') and ('control=dir_pwm_v1' not in line or 'matrix=1' not in line)):
+            self.disconnect('固件不兼容：请先烧录新版输入组合保护主程序；常转固件需断24V停止。')
             return
         s = parse_state(line)
         if s and self.handshake:
@@ -290,20 +305,24 @@ class MotorTuner(QWidget):
             if self.pending and s['reason'] == 'pwm_set_probe_required' and s['pwm'] == self.pending['pwm']:
                 request = self.pending; self.pending = None
                 if s['home'] and not s['active'] and 14000 <= s['pos'] <= 20000 and abs(s['pos'] - request['start_ticks']) <= 2:
-                    self.run_record = dict(direction=request['direction'], pwm=request['pwm'],
+                    self.run_record = dict(direction=request['direction'], combination=int(request['direction']), pwm=request['pwm'],
+                        ain1=('LOW','PWM','HIGH')[int(request['direction'])//3],
+                        ain2=('LOW','PWM','HIGH')[int(request['direction'])%3],
                         requested_ms=request['duration_ms'], start_ticks=s['pos'],
                         created_at=datetime.now().isoformat(timespec='seconds'), seen_active=False,
                         sent_monotonic=time.monotonic())
-                    self.log_message(f"本次设置：方向 {request['direction']}，PWM {request['pwm']}/1023，"
+                    self.log_message(f"本次设置：组合 {request['direction']}，PWM {request['pwm']}/1023，"
                                      f"请求 {request['duration_ms']} ms，起点 {s['pos']}；固件执行时长和行程保护")
-                    if self.send(f"MOTOR:JOG:{request['direction']}:{request['duration_ms']}"):
+                    if self.send(f"MOTOR:MATRIX:{request['direction']}:{request['duration_ms']}"):
                         self.stop_timer.start(request['duration_ms'])
                     else:
                         self.run_record['result'] = 'send_failed'; self.history.append(self.run_record)
                         self.run_record = None; self.stop()
                 else: self.connection_label.setText('位置变化或状态不满足条件，未启动')
             if self.run_record:
-                if s['active']: self.run_record['seen_active'] = True
+                if s['active']:
+                    self.run_record['seen_active'] = True
+                    self.send('PINS?')
                 elif self.run_record['seen_active'] or s['reason'] not in ('pwm_set_probe_required', 'probing'):
                     self.stop_timer.stop()
                     r = self.run_record; r['end_ticks'] = s['pos']
@@ -333,7 +352,7 @@ class MotorTuner(QWidget):
             str(Path(__file__).parent / 'motor_test_results.json'), 'JSON (*.json)')
         if filename:
             try:
-                Path(filename).write_text(json.dumps(dict(schema_version=1, board='WEMOS D1 R1',
+                Path(filename).write_text(json.dumps(dict(schema_version=2, board='WEMOS D1 R1',
                     tests=self.history, status_samples=self.events), ensure_ascii=False, indent=2), encoding='utf-8')
                 self.log.appendPlainText('已导出：' + filename)
             except OSError as exc: self.log.appendPlainText('导出失败：' + str(exc))
