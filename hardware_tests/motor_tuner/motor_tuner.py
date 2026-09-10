@@ -23,7 +23,8 @@ def parse_state(line):
         if (s['home'] not in (0, 1) or s['active'] not in (0, 1)
                 or (s['low'], s['high'], s['stop']) != (1745, 33146, 1945)
                 or not 300 <= s['pwm'] <= 700
-                or s['direction'] not in ('F', 'R', 'unknown')):
+                or s['direction'] not in ('F', 'R', 'unknown')
+                or s.get('control') != 'dir_pwm_v1'):
             return None
         s['reason']  # Require a complete status, not a command echo.
         return s
@@ -75,7 +76,7 @@ class MotorTuner(QWidget):
         self.export_button.clicked.connect(self.export)
         row.addWidget(self.export_button)
         layout.addLayout(row)
-        self.connection_label = QLabel('未连接。使用已烧录的 2 秒保护版主程序，无需再次烧录。')
+        self.connection_label = QLabel('未连接。需烧录新版方向＋PWM保护主程序；常转程序和旧版固件不支持本工具。')
         self.connection_label.setWordWrap(True)
         layout.addWidget(self.connection_label)
         status = QGroupBox('实时状态')
@@ -100,12 +101,12 @@ class MotorTuner(QWidget):
         row = QHBoxLayout()
         row.addWidget(QLabel('方向'))
         self.direction = QComboBox()
-        self.direction.addItem('F：D7 输出 / D8 低', 'F')
-        self.direction.addItem('R：D8 输出 / D7 低', 'R')
+        self.direction.addItem('正转 F：回卷线盘（D7 低 / D8 PWM）', 'F')
+        self.direction.addItem('反转 R：脱离离合器（D7 高 / D8 PWM）', 'R')
         row.addWidget(self.direction, 1)
         row.addWidget(QLabel('运行时间'))
         self.duration = QSpinBox(); self.duration.setRange(100, 2000)
-        self.duration.setSingleStep(100); self.duration.setValue(2000)
+        self.duration.setSingleStep(100); self.duration.setValue(500)
         self.duration.setSuffix(' ms'); row.addWidget(self.duration)
         box.addLayout(row)
         row = QHBoxLayout(); row.addWidget(QLabel('PWM 输出'))
@@ -118,11 +119,11 @@ class MotorTuner(QWidget):
         self.pwm.valueChanged.connect(lambda v: self.percent.setText(f'{100*v/1023:.1f}%'))
         row.addWidget(self.slider, 1); row.addWidget(self.pwm); row.addWidget(self.percent)
         box.addLayout(row)
-        note = QLabel('每次只运行一次；F/R 不预设为收线或放线。PWM 不是实测力度。\n'
-                      '固件最多 2 秒，移动 150 个计数会提前停；较短时间由窗口发送停止指令。')
+        note = QLabel('正转回卷；反转脱离离合器，不是放线。数值是驱动占空比，不是实测转速或力度。\n'
+                      '固件按所选时长停止（最多2秒）；正转最多150计数，反转移动8计数即停。')
         note.setWordWrap(True); box.addWidget(note)
         row = QHBoxLayout()
-        self.run_button = QPushButton('运行一次')
+        self.run_button = QPushButton('点动一次')
         self.run_button.setStyleSheet('background:#176e8a;color:white;padding:12px;font-size:18px')
         self.run_button.clicked.connect(self.run)
         row.addWidget(self.run_button, 2)
@@ -138,7 +139,7 @@ class MotorTuner(QWidget):
         self.result = QLabel('本次位移：—')
         self.result.setWordWrap(True); layout.addWidget(self.result)
         self.observation = QComboBox()
-        self.observation.addItems(['尚未记录观察', '明显收线', '放线 / 线变松',
+        self.observation.addItems(['尚未记录观察', '明显收线', '离合器已脱离', '意外放线 / 线变松',
                                    '电机转但没带动线', '仅抖动 / 有声音', '完全无动作'])
         row = QHBoxLayout(); row.addWidget(QLabel('最近一次观察')); row.addWidget(self.observation, 1)
         save_note = QPushButton('保存观察到最近一次测试')
@@ -269,6 +270,10 @@ class MotorTuner(QWidget):
 
     def handle_line(self, line):
         if line == 'ACK: HELLO_PC': self.handshake = True
+        if line.startswith(('MOTOR_CONTINUOUS:', 'MOTOR_DIR_PWM:')) or (
+                line.startswith('TRAVEL:home=') and 'control=dir_pwm_v1' not in line):
+            self.disconnect('固件不兼容：请先烧录新版方向＋PWM保护主程序；常转固件需断24V停止。')
+            return
         s = parse_state(line)
         if s and self.handshake:
             self.state = s; self.last_rx = time.monotonic()
@@ -290,8 +295,8 @@ class MotorTuner(QWidget):
                         created_at=datetime.now().isoformat(timespec='seconds'), seen_active=False,
                         sent_monotonic=time.monotonic())
                     self.log_message(f"本次设置：方向 {request['direction']}，PWM {request['pwm']}/1023，"
-                                     f"请求 {request['duration_ms']} ms，起点 {s['pos']}；固件最多2秒/150计数")
-                    if self.send('MOTOR:PROBE:' + request['direction']):
+                                     f"请求 {request['duration_ms']} ms，起点 {s['pos']}；固件执行时长和行程保护")
+                    if self.send(f"MOTOR:JOG:{request['direction']}:{request['duration_ms']}"):
                         self.stop_timer.start(request['duration_ms'])
                     else:
                         self.run_record['result'] = 'send_failed'; self.history.append(self.run_record)

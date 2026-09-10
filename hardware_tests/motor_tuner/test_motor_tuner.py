@@ -10,7 +10,7 @@ app = QApplication.instance() or QApplication([])
 
 def state(pos=17000, home=1, active=0, pwm=512, reason='home_confirmed'):
     return (f'TRAVEL:home={home},pos={pos},low=1745,high=33146,stop=1945,'
-            f'direction=unknown,active={active},pwm={pwm},reason={reason}')
+            f'direction=unknown,active={active},pwm={pwm},control=dir_pwm_v1,reason={reason}')
 
 
 class Tests(unittest.TestCase):
@@ -33,6 +33,30 @@ class Tests(unittest.TestCase):
         self.w.pwm.setValue(600); self.w.duration.setValue(500)
         self.w.direction.setCurrentIndex(1)
         self.assertEqual(self.sent, [])
+
+    def test_reverse_duration_sent_to_firmware_and_zero_motion_completes(self):
+        self.w.direction.setCurrentIndex(1)
+        self.w.duration.setValue(100)
+        self.w.run()
+        self.w.handle_line(state(reason='pwm_set_probe_required'))
+        self.assertEqual(self.sent[-1], 'MOTOR:JOG:R:100')
+        self.w.handle_line(state(active=1, reason='probing'))
+        self.w.handle_line(state(reason='clutch_jog_complete'))
+        self.assertEqual(self.w.history[-1]['delta_ticks'], 0)
+        self.assertIsNone(self.w.run_record)
+
+    def test_old_firmware_and_continuous_firmware_are_rejected(self):
+        self.assertIsNone(parse_state(state().replace('control=dir_pwm_v1,', '')))
+        self.w.handle_line('MOTOR_DIR_PWM: DIR_GPIO13=0 PWM_GPIO0=512/1023 freq=500Hz')
+        self.assertFalse(self.w.run_button.isEnabled())
+        self.assertIn('固件不兼容', self.w.connection_label.text())
+
+    def test_stop_ack_before_active_status_finishes_record(self):
+        self.w.run()
+        self.w.handle_line(state(reason='pwm_set_probe_required'))
+        self.w.stop()
+        self.w.handle_line(state(reason='stopped'))
+        self.assertIsNone(self.w.run_record)
 
     def test_disabled_reason_matches_state(self):
         self.w.handle_line(state(home=0))
@@ -58,9 +82,9 @@ class Tests(unittest.TestCase):
         self.w.handle_line(state(reason='pwm_set_probe_required', pwm=300))
         self.assertEqual(len(self.sent), 1)
         self.w.handle_line(state(reason='pwm_set_probe_required'))
-        self.assertEqual(self.sent[-1], 'MOTOR:PROBE:F')
+        self.assertEqual(self.sent[-1], 'MOTOR:JOG:F:500')
         self.w.handle_line(state(reason='pwm_set_probe_required'))
-        self.assertEqual(self.sent.count('MOTOR:PROBE:F'), 1)
+        self.assertEqual(self.sent.count('MOTOR:JOG:F:500'), 1)
         self.w.handle_line(state(active=1, reason='probing'))
         self.w.handle_line(state(pos=16850, reason='probe_complete'))
         self.assertEqual(self.w.history[-1]['delta_ticks'], -150)
@@ -75,12 +99,12 @@ class Tests(unittest.TestCase):
     def test_stop_cancels_late_ack(self):
         self.w.run(); self.w.stop()
         self.w.handle_line(state(reason='pwm_set_probe_required'))
-        self.assertFalse(any(s.startswith('MOTOR:PROBE:') for s in self.sent))
+        self.assertFalse(any(s.startswith('MOTOR:JOG:') for s in self.sent))
 
     def test_moving_while_applying_rejects_probe(self):
         self.w.run()
         self.w.handle_line(state(pos=17100, reason='pwm_set_probe_required'))
-        self.assertFalse(any(s.startswith('MOTOR:PROBE:') for s in self.sent))
+        self.assertFalse(any(s.startswith('MOTOR:JOG:') for s in self.sent))
 
     def test_home_requires_explicit_check(self):
         self.w.home(); self.assertEqual(self.sent, [])

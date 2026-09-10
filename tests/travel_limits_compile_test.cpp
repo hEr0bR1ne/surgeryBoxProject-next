@@ -1,5 +1,18 @@
 #include "travel_limits.h"
 
+static_assert(motorPwmHighDuty(false, 300) == 300, "Forward high duty");
+static_assert(motorPwmHighDuty(true, 300) == 723, "Reverse drive uses LOW portion");
+static_assert(checkJog(true, 17000, 17000, 17000, 499, 500) == TravelStop::None, "Clutch no-motion is expected");
+static_assert(checkJog(true, 17000, 17000, 17000, 500, 500) == TravelStop::ProbeDone, "Firmware owns requested deadline");
+static_assert(checkJog(false, 17000, 17000, 17000, 100, 100) == TravelStop::ProbeDone, "Shortest deadline without GUI");
+static_assert(checkJog(true, 16992, 17000, 16992, 20, 500) == TravelStop::ClutchMoved, "Clutch must not wind");
+static_assert(checkJog(true, 17008, 17000, 17000, 20, 500) == TravelStop::ClutchMoved, "Clutch must not unwind");
+static_assert(checkJog(false, 17009, 17000, 17000, 20, 500) == TravelStop::WrongWay, "Forward must decrease ticks");
+static_assert(checkJog(false, 16850, 17000, 16850, 20, 500) == TravelStop::ProbeDone, "150 tick cap");
+static_assert(checkJog(false, 1945, 2000, 1945, 500, 500) == TravelStop::Boundary, "Boundary outranks deadline");
+static_assert(checkJog(true, 33147, 33146, 33146, 500, 500) == TravelStop::Boundary, "Upper bound outranks clutch/deadline");
+static_assert(checkJog(false, 17000, 17000, 17000, 2000, 9000) == TravelStop::ProbeDone, "Hard two second cap");
+
 // Compiled against the actual policy by the ESP8266 toolchain; no hardware motion.
 static_assert(TRAVEL_LOW > 0 && TRAVEL_HIGH < TRAVEL_MEASURED_MAX, "Both endpoints inset");
 static_assert(checkTravel(false, 1945, 33146, 1945, 100, 0) == TravelStop::Boundary, "Stop before lower bound");

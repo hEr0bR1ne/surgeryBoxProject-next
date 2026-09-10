@@ -1,4 +1,4 @@
-> **2026-09-10 现场更新：用户要求并已重新烧录电机常转测试固件 hardware_tests/motor_continuous。上传校验通过，COM4 串口连续确认 MOTOR_CONTINUOUS: GPIO13=1 GPIO0=0。此前恢复保护主程序的记录是历史状态。当前固件无行程限位或串口停止，停止需断开电机外部供电。烧录时用户确认24V断开、USB连接、电机脱离卷线负载；未验证电机实际转动。原主程序备份保留，交接联调前需再次恢复保护主程序。**
+> **2026-09-10 15:27 现场更新：新版方向＋PWM正反点动保护主程序已烧录COM4，上传校验通过；串口确认control=dir_pwm_v1、active=0、home=0、direction=unknown、D7/D8均低、BRAKE:ANGLE:0、LIGHT:OFF。此前常转固件已被替换。用户说明正转回卷，反转脱离离合器。烧录核对时整套24V断开、USB保留，未执行运动或登记机械零点；点动及实际离合器行为仍待用户测试。详见 [点动工具说明](hardware_tests/motor_tuner/README.md)。**
 
 # SurgeryBox Next 0.1.0
 

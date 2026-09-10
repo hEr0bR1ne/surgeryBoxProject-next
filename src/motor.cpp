@@ -7,7 +7,7 @@
 
 static bool referenced = false;
 static bool directionKnown = false;
-static bool rewindUsesReverse = true;
+static bool rewindUsesReverse = false;
 static bool active = false;
 static bool probing = false;
 static bool probeReverse = true;
@@ -17,6 +17,7 @@ static unsigned long startA = 0, startB = 0;
 static unsigned long progressA = 0, progressB = 0;
 static long progressTicks = 0;
 static int drivePwm = 300;
+static unsigned long probeDurationMs = PROBE_MS;
 static const char* reason = "boot_unreferenced";
 
 static void report() {
@@ -24,7 +25,8 @@ static void report() {
         ",pos=" + String(readPhysicalTicks()) + ",low=" + String(TRAVEL_LOW) +
         ",high=" + String(TRAVEL_HIGH) + ",stop=" + String(TRAVEL_STOP) +
         ",direction=" + String(directionKnown ? (rewindUsesReverse ? "R" : "F") : "unknown") +
-        ",active=" + String(active ? 1 : 0) + ",pwm=" + String(drivePwm) + ",reason=" + reason);
+        ",active=" + String(active ? 1 : 0) + ",pwm=" + String(drivePwm) +
+        ",control=dir_pwm_v1,reason=" + reason);
 }
 
 void motorStop() {
@@ -33,6 +35,7 @@ void motorStop() {
     digitalWrite(D7, LOW);
     digitalWrite(D8, LOW);
     active = false;
+    reason = "stopped";
 }
 
 static void stopWith(const char* why) {
@@ -45,10 +48,11 @@ void motorInit() {
     pinMode(D7, OUTPUT);
     pinMode(D8, OUTPUT);
     analogWriteRange(1023);
-    analogWriteFreq(1000);
+    analogWriteFreq(500);
     motorStop();
     referenced = false;
     directionKnown = false;
+    reason = "boot_unreferenced";
     Serial.println("[Motor] Guarded mode; confirm physical home, then direction probe");
 }
 
@@ -72,9 +76,16 @@ static bool begin(bool probe, bool reverse) {
     servoBrakeRelease();
     active = true;
     reason = probe ? "probing" : "rewinding";
-    // Modest initial PWM; probe and rewind use the same output configuration.
-    digitalWrite(reverse ? D7 : D8, LOW);
-    analogWrite(reverse ? D8 : D7, drivePwm);
+    // AIN1 is direction; AIN2 always carries PWM. Reverse drive occurs
+    // during IN2 LOW (IN1=IN2=HIGH is brake), so invert the high duty.
+    // Establish 11 before reverse PWM, avoiding a full reverse start pulse.
+    if (reverse) {
+        digitalWrite(D8, HIGH);
+        digitalWrite(D7, HIGH);
+    } else {
+        digitalWrite(D7, LOW);
+    }
+    analogWrite(D8, motorPwmHighDuty(reverse, drivePwm));
     report();
     return true;
 }
@@ -100,12 +111,17 @@ void motorUpdateWindBack() {
     }
     lastTicks = pos;
     if (pos < bestTicks) bestTicks = pos;
-    const auto action = checkTravel(probing, pos, startTicks, bestTicks, now - startMs, now - progressMs);
+    const auto action = probing
+        ? checkJog(probeReverse, pos, startTicks, bestTicks, now - startMs, probeDurationMs)
+        : checkTravel(false, pos, startTicks, bestTicks, now - startMs, now - progressMs);
     if (action == TravelStop::ProbeDone) {
         motorStop();
         const long delta = pos - startTicks;
-        if (abs(delta) >= 8 && readEncoderEdgesA() > startA && readEncoderEdgesB() > startB) {
-            rewindUsesReverse = delta < 0 ? probeReverse : !probeReverse;
+        if (probeReverse) {
+            directionKnown = false;
+            reason = "clutch_jog_complete";
+        } else if (delta <= -8 && readEncoderEdgesA() > startA && readEncoderEdgesB() > startB) {
+            rewindUsesReverse = false;
             directionKnown = true;
             reason = "probe_complete";
         } else {
@@ -118,6 +134,7 @@ void motorUpdateWindBack() {
     if (action != TravelStop::None) {
         if (action == TravelStop::WrongWay || action == TravelStop::NoFeedback) directionKnown = false;
         stopWith(action == TravelStop::Boundary ? "travel_stop" :
+                 action == TravelStop::ClutchMoved ? "clutch_unexpected_movement" :
                  action == TravelStop::WrongWay ? "wrong_direction" :
                  action == TravelStop::NoFeedback ? "no_encoder_progress" : "timeout");
         return;
@@ -162,7 +179,26 @@ bool handleMotorSafetyCommand(const String& command) {
         }
         return true;
     }
+    if (command.startsWith("MOTOR:JOG:")) {
+        const String value = command.substring(12);
+        bool valid = command.length() >= 15 && command.charAt(11) == ':' &&
+            (command.charAt(10) == 'F' || command.charAt(10) == 'R') && value.length() <= 4;
+        for (unsigned int i = 0; i < value.length(); ++i)
+            if (value[i] < '0' || value[i] > '9') valid = false;
+        const long duration = value.toInt();
+        if (!valid || duration < 100 || duration > 2000) {
+            sendUDPMessageToLast("ERROR: use MOTOR:JOG:F:100..2000 or MOTOR:JOG:R:100..2000");
+        } else if (active) {
+            sendUDPMessageToLast("ERROR: motor already active");
+        } else {
+            probeDurationMs = duration;
+            begin(true, command.charAt(10) == 'R');
+        }
+        return true;
+    }
     if (command == "MOTOR:PROBE:R" || command == "MOTOR:PROBE:F") {
+        if (active) { sendUDPMessageToLast("ERROR: motor already active"); return true; }
+        probeDurationMs = PROBE_MS;
         begin(true, command.endsWith(":R"));
         return true;
     }

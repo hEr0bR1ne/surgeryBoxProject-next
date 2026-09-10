@@ -1,3 +1,22 @@
+# 最新恢复状态
+
+## 2026-09-10 15:27 正反点动版再次恢复
+
+用户确认整套24V断开、USB连接、串口工具关闭后，已将新版根目录保护固件烧录COM4并校验成功。固件328720字节，SHA256 `c62bb5e80ff2148a8a012c26af647a4c89da08ed0a41e759a8e9cbe0a6fbcc92`。此前常转测试固件已替换。
+
+只读回执：
+
+```text
+TRAVEL:home=0,pos=1,low=1745,high=33146,stop=1945,direction=unknown,active=0,pwm=300,control=dir_pwm_v1,reason=boot_unreferenced
+BRAKE:ANGLE:0
+LIGHT:OFF
+PINS:D0=0,D1=0,D2=0,D3=0,D4=1,D5=1,D6=1,D7=0,D8=0
+```
+
+HELLO_PC握手成功。pos=1是编码器未供电、未建立原点时的计数，不代表物理位置。未发送HOME/JOG/PROBE/Winding，未执行外设动作。工具12项测试通过，主固件编译和行程/点动编译期断言通过；通用测试15项通过，2项Qt测试因该解释器缺少PySide6跳过。实际动力停止、离合器行为仍待现场验证。工具用的PySide6环境已单独完成12项测试。
+
+## 以下为历史恢复记录
+
 # 保护主程序恢复记录
 
 时间：2026-09-09 22:53（Asia/Shanghai）。用户授权恢复主程序，并确认整套24V断开、USB保留、COM4释放；随后重插USB。发现残留Arduino串口监视器后，仅结束该监视器进程，保留编辑器，烧录成功。
