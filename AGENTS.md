@@ -1,3 +1,5 @@
+> **2026-09-10 现场更新：用户要求并已重新烧录电机常转测试固件 hardware_tests/motor_continuous。上传校验通过，COM4 串口连续确认 MOTOR_CONTINUOUS: GPIO13=1 GPIO0=0。此前恢复保护主程序的记录是历史状态。当前固件无行程限位或串口停止，停止需断开电机外部供电。烧录时用户确认24V断开、USB连接、电机脱离卷线负载；未验证电机实际转动。原主程序备份保留，交接联调前需再次恢复保护主程序。**
+
 # Hardware development constraints
 
 ## Handoff entry point
