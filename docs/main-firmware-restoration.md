@@ -1,3 +1,28 @@
+# 当前交接固件：电机禁用
+
+2026-09-11T01:08:29（Asia/Shanghai）。用户确认24V断开、USB保留、串口关闭后执行烧录；COM4初次被占用，正常关闭活动motor_tuner窗口后烧录成功，写入哈希校验通过。ESP8266EX，MAC e8:db:84:c2:d2:8c。
+
+固件328592字节，SHA256 `58404b3f851a89a8c64b9d8907906a0cdec2e712b91f9ebf6b93ed4a1b243842`。源码 `include/config.h` 的MOTOR_OUTPUT_ENABLED=false，串口不能解锁。更改前源码和固件备份在本机忽略目录hardware_backups/before_motor_disabled_时间戳。
+
+实测拒绝：Winding、MF、MR、MotorForward、MotorReverse、MOTOR:PWM:512、PROBE F/R、JOG F/R、MATRIX 0～8，共19条，均返回 `ERROR: motor_disabled_handoff`。没有发送TRAVEL:HOME或解除禁用。
+
+只读状态：
+
+```text
+TRAVEL:home=0,pos=0,low=1745,high=33146,stop=1945,direction=unknown,active=0,pwm=300,control=dir_pwm_v1,pwm_mode=same_positive,motor_enabled=0,matrix=0,combo=-1,duration_ms=2000,reason=motor_disabled_handoff
+MS -> ACK: MotorStop
+BRAKE? -> BRAKE:ANGLE:0
+LIGHT? -> LIGHT:OFF
+ENC? -> ENC:raw=0,ticks=0,dist_m=0.0000,A=1,B=1,edgeA=0,edgeB=0,seq=0
+PINS? -> PINS:D0=0,D1=0,D2=0,D3=0,D4=0,D5=1,D6=1,D7=0,D8=0
+```
+
+HELLO_PC握手成功，末次TRAVEL仍active=0、motor_enabled=0。串口已关闭释放。GUI15项测试通过；当前编译成功。外部24V保持断开，未验证舵机实际动作、灯亮灭或编码器移动，完整训练交接给上位机协作者。历史驱动异常未解决。
+
+---
+
+以下为历史恢复记录，不能当作当前板上固件：
+
 > **2026-09-11 输入组合测试版已烧录：** D7→AIN1、D8→AIN2恢复原接法。固件支持LOW/PWM/HIGH的9种组合逐项点动，状态matrix=1；普通组合最多2秒，全驱动组合2/6最多200ms，双向150计数限位及原机械行程保护保留。用户确认烧录准备完成；COM4烧录校验成功，未登记零点的9种组合均已实测拒绝，非法编号和时长拒绝，D7/D8均低。GUI14项测试和编译期保护断言通过。未执行动力测试，用户随后逐项观察；先前方向假设不能视为已证实。固件SHA256 `8be5b99a683ca12312bbac9b0cb80a9f3339941512387451fe10e6e3ca78935f`。
 
 > **2026-09-10 15:53 最新实物状态：同PWM对照版保护固件已烧录COM4并通过写入校验。正反转只切换D7低/高，D8使用相同正数PWM，不做占空比反相。串口确认 pwm_mode=same_positive、home=0、active=0、direction=unknown，D7/D8均低。24V断开时核对，未执行运动；实际正反转效果待测试。固件SHA256：47d8aa8b1e1b7dc5cb6d9616f44e5457e214840af82424a165fd481031af5544。**

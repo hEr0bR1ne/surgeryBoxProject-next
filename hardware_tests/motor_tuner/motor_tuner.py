@@ -271,6 +271,9 @@ class MotorTuner(QWidget):
             self.handle_line(raw.decode('utf-8', errors='replace').strip())
 
     def handle_line(self, line):
+        if line.startswith('TRAVEL:home=') and 'motor_enabled=0' in line:
+            self.disconnect('上位机联调版：电机已在固件中禁用，点动和回卷不可用。')
+            return
         if line.startswith('PINS:') and self.run_record and self.state and self.state['active']:
             try:
                 pins = dict(item.split('=', 1) for item in line[5:].split(','))

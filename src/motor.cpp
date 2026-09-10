@@ -27,7 +27,8 @@ static void report() {
         ",high=" + String(TRAVEL_HIGH) + ",stop=" + String(TRAVEL_STOP) +
         ",direction=" + String(directionKnown ? (rewindUsesReverse ? "R" : "F") : "unknown") +
         ",active=" + String(active ? 1 : 0) + ",pwm=" + String(drivePwm) +
-        ",control=dir_pwm_v1,pwm_mode=same_positive,matrix=1,combo=" + String(matrixCombination) +
+        ",control=dir_pwm_v1,pwm_mode=same_positive,motor_enabled=" + String(MOTOR_OUTPUT_ENABLED ? 1 : 0) +
+        ",matrix=" + String(MOTOR_OUTPUT_ENABLED ? 1 : 0) + ",combo=" + String(matrixCombination) +
         ",duration_ms=" + String(probeDurationMs) + ",reason=" + reason);
 }
 
@@ -37,7 +38,7 @@ void motorStop() {
     digitalWrite(D7, LOW);
     digitalWrite(D8, LOW);
     active = false;
-    reason = "stopped";
+    reason = MOTOR_OUTPUT_ENABLED ? "stopped" : "motor_disabled_handoff";
 }
 
 static void stopWith(const char* why) {
@@ -54,11 +55,13 @@ void motorInit() {
     motorStop();
     referenced = false;
     directionKnown = false;
-    reason = "boot_unreferenced";
-    Serial.println("[Motor] Guarded mode; confirm physical home, then direction probe");
+    reason = MOTOR_OUTPUT_ENABLED ? "boot_unreferenced" : "motor_disabled_handoff";
+    Serial.println(MOTOR_OUTPUT_ENABLED ? "[Motor] Guarded mode; confirm physical home, then direction probe" :
+                   "[Motor] DISABLED for upper-computer handoff; D7/D8 LOW");
 }
 
 static bool begin(bool probe, bool reverse, int combination = -1) {
+    if (!MOTOR_OUTPUT_ENABLED) { stopWith("motor_disabled_handoff"); return false; }
     if (active) { sendUDPMessageToLast("ERROR: motor already active"); return false; }
     const long pos = readPhysicalTicks();
     if (!referenced) { stopWith("home_required"); return false; }
@@ -160,6 +163,13 @@ void motorUpdateWindBack() {
 
 bool handleMotorSafetyCommand(const String& command) {
     if (command == "TRAVEL?") { report(); return true; }
+    if (!MOTOR_OUTPUT_ENABLED && (command.startsWith("MOTOR:") || command == "Winding" ||
+            command == "MF" || command == "MR" || command == "MotorForward" || command == "MotorReverse")) {
+        motorStop();
+        sendUDPMessageToLast("ERROR: motor_disabled_handoff");
+        report();
+        return true;
+    }
     if (command.startsWith("MOTOR:MATRIX:")) {
         const String value = command.substring(15);
         bool valid = command.length() >= 18 && command.charAt(14) == ':' &&

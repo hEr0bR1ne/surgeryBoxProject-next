@@ -34,6 +34,11 @@ class Tests(unittest.TestCase):
         self.w.direction.setCurrentIndex(1)
         self.assertEqual(self.sent, [])
 
+    def test_handoff_firmware_reports_motor_disabled(self):
+        self.w.handle_line(state().replace('matrix=1', 'matrix=0,motor_enabled=0'))
+        self.assertFalse(self.w.run_button.isEnabled())
+        self.assertIn('电机已在固件中禁用', self.w.connection_label.text())
+
     def test_reverse_duration_sent_to_firmware_and_zero_motion_completes(self):
         self.w.direction.setCurrentIndex(1)
         self.w.duration.setValue(100)
