@@ -1,3 +1,5 @@
+> **2026-09-15 新板更换：原板据用户反馈损坏，已为新WEMOS D1 R1烧录同一电机禁用联调固件。COM4，ESP8266EX，MAC 80:7d:3a:11:d5:8b，写入校验通过。串口确认motor_enabled=0、active=0、home=0、D7/D8低，Winding被拒绝；BRAKE:ANGLE:0、LIGHT:OFF、ENC?查询正常。24V断开时核对，未验证外设实际动作；COM4已释放。**
+
 > **最新实物状态：2026-09-11T01:08:29（本机北京时间），电机禁用的上位机联调主程序已烧录COM4，写入校验通过。实测19条电机命令全部返回ERROR: motor_disabled_handoff；motor_enabled=0、matrix=0、active=0、D7/D8均低。舵机指令0°、LIGHT:OFF及ENC?查询正常。24V断开期间核对，未测试外设实际动作。COM4已释放。**
 
 > **2026-09-11 上位机联调交接：电机输出已在源码中禁用（MOTOR_OUTPUT_ENABLED=false），Winding及全部电机测试命令均拒绝。舵机、编码器和血迹灯保留。实际烧录状态见 docs/main-firmware-restoration.md；最新交接见 docs/AI-HANDOFF.md。不要恢复电机测试固件或通过串口尝试解锁。**

@@ -1,3 +1,5 @@
+> **2026-09-15 新板更换：原板据用户反馈损坏，已为新WEMOS D1 R1烧录同一电机禁用联调固件。COM4，ESP8266EX，MAC 80:7d:3a:11:d5:8b，写入校验通过。串口确认motor_enabled=0、active=0、home=0、D7/D8低，Winding被拒绝；BRAKE:ANGLE:0、LIGHT:OFF、ENC?查询正常。24V断开时核对，未验证外设实际动作；COM4已释放。**
+
 # 当前交接固件：电机禁用
 
 2026-09-11T01:08:29（Asia/Shanghai）。用户确认24V断开、USB保留、串口关闭后执行烧录；COM4初次被占用，正常关闭活动motor_tuner窗口后烧录成功，写入哈希校验通过。ESP8266EX，MAC e8:db:84:c2:d2:8c。
