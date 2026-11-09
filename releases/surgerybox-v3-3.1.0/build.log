@@ -1,0 +1,26 @@
+Processing d1_v3_hardware (platform: espressif8266@4.2.1; board: d1; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif8266/d1.html
+PLATFORM: Espressif 8266 (4.2.1) > WEMOS D1 R1
+HARDWARE: ESP8266 80MHz, 80KB RAM, 4MB Flash
+PACKAGES:
+ - framework-arduinoespressif8266 @ 3.30102.0 (3.1.2)
+ - tool-esptool @ 1.413.0 (4.13)
+ - tool-esptoolpy @ 1.30000.201119 (3.0.0)
+ - toolchain-xtensa @ 2.100300.220621 (10.3.0)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 37 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- ESP8266WiFi @ 1.0
+|-- Servo @ 1.0.2
+|-- Wire @ 1.0
+Building in release mode
+Retrieving maximum program size .pio\build\d1_v3_hardware\firmware.elf
+Checking size .pio\build\d1_v3_hardware\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [====      ]  38.8% (used 31744 bytes from 81920 bytes)
+Flash: [===       ]  27.4% (used 286307 bytes from 1044464 bytes)
+========================= [SUCCESS] Took 0.81 seconds =========================

@@ -8,10 +8,19 @@
 
 Servo brakeServo;
 
-// User calibration, 2026-09-09: commanded angles, not measured force.
-#define BRAKE_LOCK_ANGLE 125
-#define BRAKE_WEAK_ANGLE 55
-#define BRAKE_RELEASE_ANGLE 0
+// V3 user calibration, 2026-11-03: commanded angles, not measured force.
+#define BRAKE_LOCK_ANGLE 50
+#define BRAKE_WEAK_ANGLE 120
+#define BRAKE_RELEASE_ANGLE 180
+
+// Installation may reverse the relationship between angle and brake force.
+static constexpr int BRAKE_MIN_ANGLE =
+    BRAKE_LOCK_ANGLE < BRAKE_RELEASE_ANGLE ? BRAKE_LOCK_ANGLE : BRAKE_RELEASE_ANGLE;
+static constexpr int BRAKE_MAX_ANGLE =
+    BRAKE_LOCK_ANGLE > BRAKE_RELEASE_ANGLE ? BRAKE_LOCK_ANGLE : BRAKE_RELEASE_ANGLE;
+static_assert(BRAKE_MIN_ANGLE >= 0 && BRAKE_MAX_ANGLE <= 180 &&
+              BRAKE_WEAK_ANGLE >= BRAKE_MIN_ANGLE && BRAKE_WEAK_ANGLE <= BRAKE_MAX_ANGLE,
+              "Brake calibration must fit the servo range");
 
 static int commandedAngle = BRAKE_RELEASE_ANGLE;
 
@@ -50,12 +59,12 @@ bool handleBrakeCalibrationCommand(const String& command) {
     if (!command.startsWith("BRAKE:")) return false;
     const String prefix = "BRAKE:ANGLE:";
     if (!command.startsWith(prefix)) {
-        sendUDPMessageToLast("ERROR: BRAKE expected BRAKE:ANGLE:<0-125>");
+        sendUDPMessageToLast("ERROR: BRAKE expected BRAKE:ANGLE:<50-180>");
         return true;
     }
     String value = command.substring(prefix.length());
     if (value.length() < 1 || value.length() > 3) {
-        sendUDPMessageToLast("ERROR: BRAKE angle must be an integer from 0 to 125");
+        sendUDPMessageToLast("ERROR: BRAKE angle must be an integer from 50 to 180");
         return true;
     }
     for (unsigned int i = 0; i < value.length(); ++i) {
@@ -65,8 +74,8 @@ bool handleBrakeCalibrationCommand(const String& command) {
         }
     }
     int angle = value.toInt();
-    if (angle < BRAKE_RELEASE_ANGLE || angle > BRAKE_LOCK_ANGLE) {
-        sendUDPMessageToLast("ERROR: BRAKE angle outside 0-125");
+    if (angle < BRAKE_MIN_ANGLE || angle > BRAKE_MAX_ANGLE) {
+        sendUDPMessageToLast("ERROR: BRAKE angle outside 50-180");
         return true;
     }
     if (sequenceRunning || motorIsWindingBack()) {

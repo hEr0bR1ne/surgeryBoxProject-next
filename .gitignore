@@ -24,3 +24,8 @@ models/*.task
 back (2).png
 1.png
 hardware_tests/origin_latest_initial_clean/
+
+# Local generated diagnostics; curated release evidence is stored under releases/.
+/test_logs/
+/tools/encoder_logs/
+/hardware_tests/*_toolkit*.zip

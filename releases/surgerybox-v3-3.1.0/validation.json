@@ -1,0 +1,39 @@
+{
+  "firmware": "3.1.0",
+  "api": 1,
+  "protocol": 8,
+  "flashed": true,
+  "binary_bytes": 290464,
+  "sha256": "96112899e6bcc152d2ef908ca1a5b5bc54636bd88b687284ec51b12d625c8af9",
+  "validation": {
+    "platformio_build": "PASS",
+    "compile_time_policy_checks": "PASS",
+    "gui_tests": 13,
+    "sdk_tests": 13,
+    "actuator_actions_this_turn": false,
+    "readonly_snapshots": 25,
+    "encoder_errors": 0,
+    "dropped_frames": 0,
+    "powered_actuation_tested": true,
+    "operator_test": {
+      "reported_satisfactory": true,
+      "completed_motor_token": 1715103486,
+      "completed_reason": "release_complete",
+      "completed_pos": 86,
+      "home": 0,
+      "encoder_errors": 0,
+      "dropped_frames": 0,
+      "initial_servo_serial_error5_observed": true
+    }
+  },
+  "behavior": {
+    "home": "first valid sample after MCU power-on",
+    "extension_limit": false,
+    "deadzone_ticks": 0,
+    "rewind_sign": 1,
+    "servo_speed_deg_s": 75,
+    "continuous_wind_limit_ms": 120000
+  },
+  "boot": "15e2c4-dd5d290c",
+  "upload_hash_verified": true
+}

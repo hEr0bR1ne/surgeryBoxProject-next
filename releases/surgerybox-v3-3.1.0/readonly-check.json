@@ -1,0 +1,203 @@
+{
+  "identity": {
+    "type": "HELLO",
+    "product": "SurgeryBoxV3",
+    "api": 1,
+    "firmware": "3.1.0",
+    "protocol": 8,
+    "boot": "15e2c4-dd5d290c",
+    "transport": "usb_serial",
+    "baud": 115200
+  },
+  "samples": 25,
+  "first": {
+    "I2CENC": {
+      "type": "I2CENC",
+      "addr": "0x06",
+      "valid": 1,
+      "raw14": 1621,
+      "angle_deg": 35.6177,
+      "relative_valid": 1,
+      "relative_ticks": 20,
+      "age_ms": 8,
+      "samples": 4263,
+      "errors": 0,
+      "mode_pin": 1
+    },
+    "MOTORPROBE": {
+      "type": "MOTORPROBE",
+      "active": 0,
+      "pos": 20,
+      "home": 0,
+      "home_valid": 1,
+      "home_captured": 1,
+      "home_source": "power_on",
+      "rewind_sign": 1,
+      "extension_limit": 0,
+      "deadzone_ticks": 0,
+      "pwm": 1023,
+      "D7": 0,
+      "D8": 0,
+      "protocol": 8,
+      "encoder_ok": 1,
+      "age_ms": 9,
+      "holding": 0,
+      "id": 0,
+      "releasing": 0,
+      "reason": "boot_disarmed"
+    },
+    "JOB": {
+      "type": "JOB",
+      "preparing": 0,
+      "token": 0,
+      "kind": "idle"
+    },
+    "BRAKE": {
+      "type": "BRAKE",
+      "enabled": 0,
+      "angle": 180,
+      "release": 180,
+      "weak": 120,
+      "lock": 50,
+      "settled": 0,
+      "measured": 0,
+      "target": 180,
+      "moving": 0,
+      "step_ms": 20,
+      "speed_deg_s": 75
+    },
+    "LIGHT": {
+      "type": "LIGHT",
+      "state": "OFF",
+      "D3": 0,
+      "gpio": 5
+    },
+    "SYSTEM": {
+      "type": "SYSTEM",
+      "uptime_ms": 42943,
+      "free_heap": 47208,
+      "dropped_frames": 0,
+      "host_timeout_ms": 1000,
+      "motor_lease_ms": 250
+    }
+  },
+  "last": {
+    "I2CENC": {
+      "type": "I2CENC",
+      "addr": "0x06",
+      "valid": 1,
+      "raw14": 1621,
+      "angle_deg": 35.6177,
+      "relative_valid": 1,
+      "relative_ticks": 20,
+      "age_ms": 7,
+      "samples": 4693,
+      "errors": 0,
+      "mode_pin": 1
+    },
+    "MOTORPROBE": {
+      "type": "MOTORPROBE",
+      "active": 0,
+      "pos": 20,
+      "home": 0,
+      "home_valid": 1,
+      "home_captured": 1,
+      "home_source": "power_on",
+      "rewind_sign": 1,
+      "extension_limit": 0,
+      "deadzone_ticks": 0,
+      "pwm": 1023,
+      "D7": 0,
+      "D8": 0,
+      "protocol": 8,
+      "encoder_ok": 1,
+      "age_ms": 8,
+      "holding": 0,
+      "id": 0,
+      "releasing": 0,
+      "reason": "boot_disarmed"
+    },
+    "JOB": {
+      "type": "JOB",
+      "preparing": 0,
+      "token": 0,
+      "kind": "idle"
+    },
+    "BRAKE": {
+      "type": "BRAKE",
+      "enabled": 0,
+      "angle": 180,
+      "release": 180,
+      "weak": 120,
+      "lock": 50,
+      "settled": 0,
+      "measured": 0,
+      "target": 180,
+      "moving": 0,
+      "step_ms": 20,
+      "speed_deg_s": 75
+    },
+    "LIGHT": {
+      "type": "LIGHT",
+      "state": "OFF",
+      "D3": 0,
+      "gpio": 5
+    },
+    "SYSTEM": {
+      "type": "SYSTEM",
+      "uptime_ms": 47280,
+      "free_heap": 43784,
+      "dropped_frames": 0,
+      "host_timeout_ms": 1000,
+      "motor_lease_ms": 250
+    }
+  },
+  "info": {
+    "PINS": {
+      "type": "PINS",
+      "board": "WEMOS_D1_R1",
+      "servo": "D2_GPIO16",
+      "light": "D3_GPIO5",
+      "mode": "D4_GPIO4",
+      "sda": "D5_GPIO14",
+      "scl": "D6_GPIO12",
+      "in1": "D7_GPIO13",
+      "in2": "D8_GPIO0"
+    },
+    "UNITS": {
+      "type": "UNITS",
+      "encoder": "MT6701_I2C14",
+      "ticks_per_turn": 16384,
+      "distance_calibrated": 0
+    },
+    "MOTORCAPS": {
+      "type": "MOTORCAPS",
+      "protocol": 8,
+      "hold_ms": 120000,
+      "hold_no_progress_ms": 500,
+      "lease_ms": 250,
+      "pwm": 1023,
+      "stale_ms": 30,
+      "release_ms": 1000,
+      "release_wait_ms": 50,
+      "release_delta": 128,
+      "light_gpio": 5,
+      "home_source": "power_on",
+      "rewind_sign": 1,
+      "extension_limit": 0,
+      "deadzone_ticks": 0
+    },
+    "SYSTEM": {
+      "type": "SYSTEM",
+      "uptime_ms": 47459,
+      "free_heap": 43784,
+      "dropped_frames": 0,
+      "host_timeout_ms": 1000,
+      "motor_lease_ms": 250
+    }
+  },
+  "bus": [
+    "BUS:mode=1,sda=1,scl=1,addr=6,clears=0"
+  ],
+  "actuator_start_commands_sent": false
+}

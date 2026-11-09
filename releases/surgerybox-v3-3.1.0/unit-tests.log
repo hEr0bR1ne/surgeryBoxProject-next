@@ -1,0 +1,13 @@
+C:/Users/koiSh1KW/miniconda3/envs/surgeryBox/python.exe -m unittest discover -s tools -p test_v3_test_client.py
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.185s
+
+OK
+
+C:/Users/koiSh1KW/.platformio/penv/Scripts/python.exe -m unittest discover -s host_sdk/tests -p test_client.py
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.438s
+
+OK

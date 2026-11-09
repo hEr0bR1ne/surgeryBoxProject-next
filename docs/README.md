@@ -1,3 +1,10 @@
+# 当前第三代文档入口
+
+先读[3.1.0交接](AI-HANDOFF.md)、[硬件API](v3-hardware-api.md)、[测试端](v3-test-console.md)及[验证记录](v3-hardware-validation.md)。
+当前入口是firmware/v3，protocol=8，USB串口；下方旧WiFi/UDP、两端标定与根目录固件说明属于历史资料。
+
+---
+
 > 接手硬件与上位机开发：先读 [AI-HANDOFF.md](AI-HANDOFF.md)，再读本目录历史资料。
 
 # 文档目录

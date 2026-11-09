@@ -1,0 +1,64 @@
+Processing d1_v3_hardware (platform: espressif8266@4.2.1; board: d1; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif8266/d1.html
+PLATFORM: Espressif 8266 (4.2.1) > WEMOS D1 R1
+HARDWARE: ESP8266 80MHz, 80KB RAM, 4MB Flash
+PACKAGES:
+ - framework-arduinoespressif8266 @ 3.30102.0 (3.1.2)
+ - tool-esptool @ 1.413.0 (4.13)
+ - tool-esptoolpy @ 1.30000.201119 (3.0.0)
+ - tool-mklittlefs @ 1.203.210628 (2.3)
+ - tool-mkspiffs @ 1.200.0 (2.0)
+ - toolchain-xtensa @ 2.100300.220621 (10.3.0)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 37 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- ESP8266WiFi @ 1.0
+|-- Servo @ 1.0.2
+|-- Wire @ 1.0
+Building in release mode
+Retrieving maximum program size .pio\build\d1_v3_hardware\firmware.elf
+Checking size .pio\build\d1_v3_hardware\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [====      ]  38.8% (used 31744 bytes from 81920 bytes)
+Flash: [===       ]  27.4% (used 286307 bytes from 1044464 bytes)
+Configuring upload protocol...
+AVAILABLE: espota, esptool
+CURRENT: upload_protocol = esptool
+Looking for upload port...
+Using manually specified: COM4
+Uploading .pio\build\d1_v3_hardware\firmware.bin
+esptool.py v3.0
+Serial port COM4
+Connecting....
+Chip is ESP8266EX
+Features: WiFi
+Crystal is 26MHz
+MAC: 8c:aa:b5:15:e2:c4
+Uploading stub...
+Running stub...
+Stub running...
+Configuring flash size...
+Compressed 290464 bytes to 212822...
+Writing at 0x00000000... (7 %)
+Writing at 0x00004000... (15 %)
+Writing at 0x00008000... (23 %)
+Writing at 0x0000c000... (30 %)
+Writing at 0x00010000... (38 %)
+Writing at 0x00014000... (46 %)
+Writing at 0x00018000... (53 %)
+Writing at 0x0001c000... (61 %)
+Writing at 0x00020000... (69 %)
+Writing at 0x00024000... (76 %)
+Writing at 0x00028000... (84 %)
+Writing at 0x0002c000... (92 %)
+Writing at 0x00030000... (100 %)
+Wrote 290464 bytes (212822 compressed) at 0x00000000 in 18.8 seconds (effective 123.6 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+========================= [SUCCESS] Took 22.12 seconds =========================

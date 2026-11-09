@@ -1,0 +1,277 @@
+TX @93547277 - HELLO
+RX @93547277 15e2c4-dd5d290c HELLO:product=SurgeryBoxV3,api=1,firmware=3.1.0,protocol=8,boot=15e2c4-dd5d290c,transport=usb_serial,baud=115200
+RX @93547277 15e2c4-dd5d290c END:OK
+TX @93547278 15e2c4-dd5d290c STATUS?
+RX @93547278 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=8,samples=4263,errors=0,mode_pin=1
+RX @93547278 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=9,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547278 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547278 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+TX ~15e2c4-dd5d290c PING
+RX @93547278 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547278 15e2c4-dd5d290c SYSTEM:uptime_ms=42943,free_heap=47208,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547278 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547279 15e2c4-dd5d290c STATUS?
+RX @93547279 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=8,samples=4281,errors=0,mode_pin=1
+RX @93547279 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=9,holding=0,id=0,releasing=0,reason=boot_disarmed
+TX ~15e2c4-dd5d290c PING
+RX @93547279 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547279 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547279 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547279 15e2c4-dd5d290c SYSTEM:uptime_ms=43125,free_heap=46256,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547279 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547280 15e2c4-dd5d290c STATUS?
+RX @93547280 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=4,samples=4299,errors=0,mode_pin=1
+TX ~15e2c4-dd5d290c PING
+RX @93547280 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=5,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547280 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547280 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547280 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547280 15e2c4-dd5d290c SYSTEM:uptime_ms=43305,free_heap=45880,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547280 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547281 15e2c4-dd5d290c STATUS?
+TX ~15e2c4-dd5d290c PING
+RX @93547281 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=4,samples=4317,errors=0,mode_pin=1
+RX @93547281 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=4,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547281 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547281 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547281 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547281 15e2c4-dd5d290c SYSTEM:uptime_ms=43486,free_heap=45624,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547281 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX ~15e2c4-dd5d290c PING
+TX @93547282 15e2c4-dd5d290c STATUS?
+RX @93547282 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=4,samples=4335,errors=0,mode_pin=1
+RX @93547282 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=5,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547282 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+TX ~15e2c4-dd5d290c PING
+RX @93547282 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547282 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547282 15e2c4-dd5d290c SYSTEM:uptime_ms=43666,free_heap=45400,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547282 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547283 15e2c4-dd5d290c STATUS?
+RX @93547283 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=5,samples=4353,errors=0,mode_pin=1
+TX ~15e2c4-dd5d290c PING
+RX @93547283 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=5,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547283 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547283 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547283 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547283 15e2c4-dd5d290c SYSTEM:uptime_ms=43847,free_heap=45192,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547283 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547284 15e2c4-dd5d290c STATUS?
+TX ~15e2c4-dd5d290c PING
+RX @93547284 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=3,samples=4371,errors=0,mode_pin=1
+RX @93547284 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=4,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547284 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547284 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547284 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547284 15e2c4-dd5d290c SYSTEM:uptime_ms=44028,free_heap=44984,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547284 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX ~15e2c4-dd5d290c PING
+TX @93547285 15e2c4-dd5d290c STATUS?
+RX @93547285 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=3,samples=4389,errors=0,mode_pin=1
+RX @93547285 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=4,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547285 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547285 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547285 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+TX ~15e2c4-dd5d290c PING
+RX @93547285 15e2c4-dd5d290c SYSTEM:uptime_ms=44208,free_heap=44776,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547285 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547286 15e2c4-dd5d290c STATUS?
+RX @93547286 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=4,samples=4407,errors=0,mode_pin=1
+RX @93547286 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=4,holding=0,id=0,releasing=0,reason=boot_disarmed
+TX ~15e2c4-dd5d290c PING
+RX @93547286 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547286 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547286 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547286 15e2c4-dd5d290c SYSTEM:uptime_ms=44389,free_heap=44568,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547286 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547287 15e2c4-dd5d290c STATUS?
+RX @93547287 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=4,samples=4425,errors=0,mode_pin=1
+TX ~15e2c4-dd5d290c PING
+RX @93547287 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=4,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547287 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547287 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547287 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547287 15e2c4-dd5d290c SYSTEM:uptime_ms=44570,free_heap=44456,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547287 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547288 15e2c4-dd5d290c STATUS?
+TX ~15e2c4-dd5d290c PING
+RX @93547288 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=4,samples=4443,errors=0,mode_pin=1
+RX @93547288 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=5,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547288 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547288 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547288 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547288 15e2c4-dd5d290c SYSTEM:uptime_ms=44751,free_heap=44344,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547288 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX ~15e2c4-dd5d290c PING
+TX @93547289 15e2c4-dd5d290c STATUS?
+RX @93547289 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=4,samples=4461,errors=0,mode_pin=1
+RX @93547289 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=4,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547289 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+TX ~15e2c4-dd5d290c PING
+RX @93547289 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547289 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547289 15e2c4-dd5d290c SYSTEM:uptime_ms=44932,free_heap=44232,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547289 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547290 15e2c4-dd5d290c STATUS?
+RX @93547290 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=3,samples=4479,errors=0,mode_pin=1
+TX ~15e2c4-dd5d290c PING
+RX @93547290 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=4,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547290 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547290 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547290 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547290 15e2c4-dd5d290c SYSTEM:uptime_ms=45113,free_heap=44120,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547290 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547291 15e2c4-dd5d290c STATUS?
+TX ~15e2c4-dd5d290c PING
+RX @93547291 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=4,samples=4497,errors=0,mode_pin=1
+RX @93547291 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=5,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547291 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547291 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547291 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547291 15e2c4-dd5d290c SYSTEM:uptime_ms=45294,free_heap=44008,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547291 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX ~15e2c4-dd5d290c PING
+TX @93547292 15e2c4-dd5d290c STATUS?
+RX @93547292 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=4,samples=4515,errors=0,mode_pin=1
+RX @93547292 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=5,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547292 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547292 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+TX ~15e2c4-dd5d290c PING
+RX @93547292 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547292 15e2c4-dd5d290c SYSTEM:uptime_ms=45475,free_heap=43896,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547292 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547293 15e2c4-dd5d290c STATUS?
+RX @93547293 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=3,samples=4533,errors=0,mode_pin=1
+RX @93547293 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=3,holding=0,id=0,releasing=0,reason=boot_disarmed
+TX ~15e2c4-dd5d290c PING
+RX @93547293 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547293 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547293 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547293 15e2c4-dd5d290c SYSTEM:uptime_ms=45655,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547293 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547294 15e2c4-dd5d290c STATUS?
+RX @93547294 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=1,samples=4551,errors=0,mode_pin=1
+TX ~15e2c4-dd5d290c PING
+RX @93547294 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=2,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547294 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547294 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547294 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547294 15e2c4-dd5d290c SYSTEM:uptime_ms=45836,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547294 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX ~15e2c4-dd5d290c PING
+TX @93547295 15e2c4-dd5d290c STATUS?
+RX @93547295 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=1,samples=4569,errors=0,mode_pin=1
+RX @93547295 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=2,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547295 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547295 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547295 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547295 15e2c4-dd5d290c SYSTEM:uptime_ms=46017,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+TX ~15e2c4-dd5d290c PING
+RX @93547295 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547296 15e2c4-dd5d290c STATUS?
+RX @93547296 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=9,samples=4586,errors=0,mode_pin=1
+RX @93547296 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=10,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547296 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+TX ~15e2c4-dd5d290c PING
+RX @93547296 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547296 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547296 15e2c4-dd5d290c SYSTEM:uptime_ms=46197,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547296 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547297 15e2c4-dd5d290c STATUS?
+RX @93547297 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=5,samples=4604,errors=0,mode_pin=1
+TX ~15e2c4-dd5d290c PING
+RX @93547297 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=6,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547297 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547297 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547297 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547297 15e2c4-dd5d290c SYSTEM:uptime_ms=46377,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547297 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547298 15e2c4-dd5d290c STATUS?
+TX ~15e2c4-dd5d290c PING
+RX @93547298 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=5,samples=4622,errors=0,mode_pin=1
+RX @93547298 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=6,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547298 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547298 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547298 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547298 15e2c4-dd5d290c SYSTEM:uptime_ms=46558,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547298 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX ~15e2c4-dd5d290c PING
+TX @93547299 15e2c4-dd5d290c STATUS?
+RX @93547299 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=3,samples=4640,errors=0,mode_pin=1
+RX @93547299 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=4,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547299 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547299 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547299 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+TX ~15e2c4-dd5d290c PING
+RX @93547299 15e2c4-dd5d290c SYSTEM:uptime_ms=46738,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547299 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547300 15e2c4-dd5d290c STATUS?
+RX @93547300 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=1,samples=4658,errors=0,mode_pin=1
+RX @93547300 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=2,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547300 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+TX ~15e2c4-dd5d290c PING
+RX @93547300 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547300 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547300 15e2c4-dd5d290c SYSTEM:uptime_ms=46919,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547300 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547301 15e2c4-dd5d290c STATUS?
+RX @93547301 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=10,samples=4675,errors=0,mode_pin=1
+TX ~15e2c4-dd5d290c PING
+RX @93547301 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=10,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547301 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547301 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547301 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547301 15e2c4-dd5d290c SYSTEM:uptime_ms=47099,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547301 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX @93547302 15e2c4-dd5d290c STATUS?
+TX ~15e2c4-dd5d290c PING
+RX @93547302 15e2c4-dd5d290c I2CENC:addr=0x06,valid=1,raw14=1621,angle_deg=35.6177,relative_valid=1,relative_ticks=20,age_ms=7,samples=4693,errors=0,mode_pin=1
+RX @93547302 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=8,holding=0,id=0,releasing=0,reason=boot_disarmed
+RX @93547302 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547302 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547302 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547302 15e2c4-dd5d290c SYSTEM:uptime_ms=47280,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547302 15e2c4-dd5d290c END:OK
+TX ~15e2c4-dd5d290c PING
+TX ~15e2c4-dd5d290c PING
+TX @93547303 15e2c4-dd5d290c INFO?
+RX @93547303 15e2c4-dd5d290c PINS:board=WEMOS_D1_R1,servo=D2_GPIO16,light=D3_GPIO5,mode=D4_GPIO4,sda=D5_GPIO14,scl=D6_GPIO12,in1=D7_GPIO13,in2=D8_GPIO0
+RX @93547303 15e2c4-dd5d290c UNITS:encoder=MT6701_I2C14,ticks_per_turn=16384,distance_calibrated=0
+RX @93547303 15e2c4-dd5d290c MOTORCAPS:protocol=8,hold_ms=120000,hold_no_progress_ms=500,lease_ms=250,pwm=1023,stale_ms=30,release_ms=1000,release_wait_ms=50,release_delta=128,light_gpio=5,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0
+RX @93547303 15e2c4-dd5d290c SYSTEM:uptime_ms=47459,free_heap=43784,dropped_frames=0,host_timeout_ms=1000,motor_lease_ms=250
+RX @93547303 15e2c4-dd5d290c END:OK
+TX @93547304 15e2c4-dd5d290c BUS?
+TX ~15e2c4-dd5d290c PING
+RX @93547304 15e2c4-dd5d290c BUS:mode=1,sda=1,scl=1,addr=6,clears=0
+RX @93547304 15e2c4-dd5d290c END:OK
+TX SAFE
+TX @93547305 15e2c4-dd5d290c SAFE
+RX @93547305 15e2c4-dd5d290c MOTORPROBE:active=0,pos=20,home=0,home_valid=1,home_captured=1,home_source=power_on,rewind_sign=1,extension_limit=0,deadzone_ticks=0,pwm=1023,D7=0,D8=0,protocol=8,encoder_ok=1,age_ms=6,holding=0,id=0,releasing=0,reason=safe_off
+RX @93547305 15e2c4-dd5d290c JOB:preparing=0,token=0,kind=idle
+RX @93547305 15e2c4-dd5d290c BRAKE:enabled=0,angle=180,release=180,weak=120,lock=50,settled=0,measured=0,target=180,moving=0,step_ms=20,speed_deg_s=75
+RX @93547305 15e2c4-dd5d290c LIGHT:state=OFF,D3=0,gpio=5
+RX @93547305 15e2c4-dd5d290c END:OK

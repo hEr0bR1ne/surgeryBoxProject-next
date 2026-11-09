@@ -1,22 +1,26 @@
-> **2026-09-15 新板更换：原板据用户反馈损坏，已为新WEMOS D1 R1烧录同一电机禁用联调固件。COM4，ESP8266EX，MAC 80:7d:3a:11:d5:8b，写入校验通过。串口确认motor_enabled=0、active=0、home=0、D7/D8低，Winding被拒绝；BRAKE:ANGLE:0、LIGHT:OFF、ENC?查询正常。24V断开时核对，未验证外设实际动作；COM4已释放。**
+# SurgeryBox V3：当前开发入口
 
-> **最新实物状态：2026-09-11T01:08:29（本机北京时间），电机禁用的上位机联调主程序已烧录COM4，写入校验通过。实测19条电机命令全部返回ERROR: motor_disabled_handoff；motor_enabled=0、matrix=0、active=0、D7/D8均低。舵机指令0°、LIGHT:OFF及ENC?查询正常。24V断开期间核对，未测试外设实际动作。COM4已释放。**
+当前已烧录固件为3.1.0 / API v1 / protocol=8，入口`firmware/v3`；SDK是`host_sdk/surgerybox_v3.py`，测试端是`tools/v3_test_client.py`。
+先读`docs/AI-HANDOFF.md`和`docs/v3-hardware-api.md`。仓库根目录的`src/`、`include/`、`platformio.ini`是历史第二代入口，不适用于当前接线；不得误烧录。
 
-> **2026-09-11 上位机联调交接：电机输出已在源码中禁用（MOTOR_OUTPUT_ENABLED=false），Winding及全部电机测试命令均拒绝。舵机、编码器和血迹灯保留。实际烧录状态见 docs/main-firmware-restoration.md；最新交接见 docs/AI-HANDOFF.md。不要恢复电机测试固件或通过串口尝试解锁。**
+## 当前用户要求
 
-# Hardware development constraints
+- MCU上电第一个有效编码器样本作为收回零点；不需人工两端标定，不设拉出上限、最小行程或提前停车死区。
+- 本机方向2为回卷，编码器计数增加。到上电零点即关方向2，再停50ms、方向1释放1秒、关闭。禁止旧输入排列组合试验。
+- 显示ZERO、上位机重连和训练开始不能移动上电零点。跟踪失效时停机并使home失效，不在未知位置自动重设；重新上电才能新建home。
+- 舵机目标180°/120°/50°，指令缓动75°/秒，完成后500ms才能启动回卷；角度不代表实测轴角。
+- 保留编码器失效、250ms运动租期、1000ms主机看门狗、500ms无净进展、错向与120秒连续回卷停止。故障/急停不自动反向。
+- 编码器仅相对计数、角度与圈数；未标定毫米，不导入第二代旧距离系数或端点。
 
-## Handoff entry point
+## 操作与验证
 
-Read `docs/AI-HANDOFF.md` first. It is the current human/AI handoff, including wiring, calibration, verified observations, unresolved motor faults, and the upper-computer integration tasks assigned to the next collaborator. Earlier bring-up notes are chronological history and may describe superseded states.
+- 发布/文档任务不需要开串口或发动作。现场状态随用户操作改变，不从旧日志推断当前输出/供电。
+- 烧录或复位前确认驱动VM/VCC与舵机正极隔离：D8/GPIO0是启动脚，复位期间可能误动。只允许一个程序占串口，不自动重连重放动作。
+- 当前用户明确同意以上上电零点和无死区行为，历史记录中的双端标定/内缩余量要求已被替代。
+- 固件检查：`platformio run -d firmware/v3`（包括policy_checks.cpp静态检查）。
+- SDK检查：`python -m unittest discover -s host_sdk/tests -p test_client.py`。
+- GUI检查：`python -m unittest discover -s tools -p test_v3_test_client.py`，需要PySide6。
+- 只读实机检查：`python host_sdk/check_hardware.py --port COM4 --actuator-power-isolated`，必须已实际隔离供电。
 
-On 2026-09-09 the guarded main application from source commit `4371a51` was restored to the board on COM4; upload hash verification and read-only serial checks passed. See `docs/main-firmware-restoration.md`. The last checked state was motor inactive, D7/D8 low, light off, commanded servo angle 0, home unreferenced and direction unknown, with external 24V disconnected and USB connected. This replaces the earlier `hardware_tests/motor_continuous` firmware, which has no serial stop or encoder limits. Do not assume the recorded state persists: verify current physical conditions before actuator commands, flashing, or restoring external power. All peripherals derive power from the external 24V through appropriate circuits; the MCU uses USB. Do not recreate the reported accidental 5V/GND short.
-
-The user explicitly requested the independent continuous test; retain its source as a bench diagnostic, not as a replacement for guarded winding. The main application and its limits remain in `src/` and `include/`.
-
-The user requires every future motor/winding operation to stay within the calibrated physical travel. Read `docs/encoder-travel-calibration.md` and `hardware_tests/encoder_range_calibration.json` before changing or testing motor control.
-
-- Use the calibrated encoder counts as the travel limit; the historical metres-per-tick factor is not yet measured for this assembly.
-- Preserve the physical home reference independently of training-relative zero. A restart, reconnect, or training Start must not silently establish a new physical home at an arbitrary position.
-- Do not run powered winding until both travel boundaries, motor direction, stop margin, and loss-of-encoder stopping are implemented and validated. The existing firmware has not yet been validated for these constraints.
-- The measured endpoint is an upper bound, not a target to exceed or a reason to remove a stopping margin. Do not use the existing automatic direction-reversal trial at a physical endpoint.
+完整回卷/释放有用户实测成功日志，仍保留首次舵机启用后的Windows串口error5问题；不能把后续成功说成此问题已根治。实际惯性仍可能超零。
+历史记录在`docs/archive/`及`docs/v3-bringup.md`，其中旧型号、供电、协议和固件状态不覆盖当前说明。

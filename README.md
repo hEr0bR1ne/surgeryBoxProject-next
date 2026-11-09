@@ -1,3 +1,30 @@
+# SurgeryBox V3 · 3.1.0
+
+第三代硬件接口、Python SDK与桌面测试端。当前主板运行**3.1.0 / protocol=8**，通过USB串口接上位机。
+
+| 入口 | 用途 |
+|---|---|
+| [交接说明](docs/AI-HANDOFF.md) | 接手者先读：当前行为、验证结果和剩余问题 |
+| [硬件接口](docs/v3-hardware-api.md) | 接线、SDK、报文与回卷状态机 |
+| [测试端说明](docs/v3-test-console.md) | 编码器、刹车、电机、灯的功能测试 |
+| [发布包](releases/surgerybox-v3-3.1.0-20261109.zip) | 固件镜像/源码、SDK、测试端、文档与验证证据 |
+| [固件源码](firmware/v3) | 当前PlatformIO工程，WEMOS D1 R1 |
+
+上电位置自动作为收回零点，无人工两端标定、无拉出上限、无提前停车死区；到零关闭回卷后释放摩擦轮1秒。
+舵机75°/秒缓动，目标180°/120°/50°。编码器MT6701 14位I2C，灯D3高有效。
+
+```powershell
+python -m pip install -r host_sdk/requirements-gui.txt
+python tools/v3_test_client.py --port COM4
+```
+
+Windows也可双击`tools/StartHardwareTest.cmd`。SDK示例见[host_sdk/example.py](host_sdk/example.py)。
+本机已完成烧录、26项SDK/GUI测试与用户回卷测试。首次舵机启用仍记录过一次串口error5，回零存在少量惯性超零，详情见交接说明。
+**根目录旧src/、include/和platformio.ini属于历史入口；当前固件只构建firmware/v3，禁止误烧旧主程序。**
+
+<details>
+<summary>历史第二代与上游项目说明（不适用于当前硬件协议）</summary>
+
 > **2026-09-15 新板更换：原板据用户反馈损坏，已为新WEMOS D1 R1烧录同一电机禁用联调固件。COM4，ESP8266EX，MAC 80:7d:3a:11:d5:8b，写入校验通过。串口确认motor_enabled=0、active=0、home=0、D7/D8低，Winding被拒绝；BRAKE:ANGLE:0、LIGHT:OFF、ENC?查询正常。24V断开时核对，未验证外设实际动作；COM4已释放。**
 
 > **最新实物状态：2026-09-11T01:08:29（本机北京时间），电机禁用的上位机联调主程序已烧录COM4，写入校验通过。实测19条电机命令全部返回ERROR: motor_disabled_handoff；motor_enabled=0、matrix=0、active=0、D7/D8均低。舵机指令0°、LIGHT:OFF及ENC?查询正常。24V断开期间核对，未测试外设实际动作。COM4已释放。**
@@ -211,3 +238,5 @@ $env:IMU_PORT="COM4"
 ```powershell
 python tools/imu_posture_tester.py --port COM3
 ```
+
+</details>

@@ -9,10 +9,10 @@ from check_blood_light import exchange
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", required=True)
-    parser.add_argument("--angle", type=int, help="Optional requested angle, 0-125 degrees")
+    parser.add_argument("--angle", type=int, help="Optional requested angle, 50-180 degrees (V3)")
     args = parser.parse_args()
-    if args.angle is not None and not 0 <= args.angle <= 125:
-        parser.error("angle must be between 0 and 125")
+    if args.angle is not None and not 50 <= args.angle <= 180:
+        parser.error("angle must be between 50 and 180")
     connection = serial.Serial(port=None, baudrate=115200, timeout=0.2, write_timeout=1)
     connection.dtr = False
     connection.rts = False
