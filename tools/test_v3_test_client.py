@@ -31,6 +31,21 @@ class GuiTests(unittest.TestCase):
         self.w.on_connected({'boot':'test-session'});self.data=state();self.w.on_state(self.data)
     def tearDown(self):self.w.close()
     def test_connect_and_state_never_trigger_actions(self):self.assertEqual(self.backend.calls,[])
+    def test_rewind_position_is_separate_from_display_zero(self):
+        data = state()
+        data['MOTORPROBE'].update(pos=-13763, home=0)
+        data['I2CENC']['relative_ticks'] = 11092
+        self.w.on_state(data)
+        self.assertIn('-13763', self.w.position.text())
+        self.assertIn('+11092', self.w.display_position.text())
+    def test_set_home_button_sends_explicit_command_only_when_supported(self):
+        self.w.zero.click()
+        self.assertEqual(self.backend.calls, [])
+        data = state()
+        data['MOTORPROBE']['home_settable'] = 1
+        self.w.on_state(data)
+        self.w.zero.click()
+        self.assertEqual(self.backend.calls, [('set_home',)])
     def test_ramping_status_distinguishes_command_from_target(self):
         data=state();data['BRAKE'].update(enabled=1,angle=160,target=120,moving=1,settled=0)
         self.w.on_state(data)

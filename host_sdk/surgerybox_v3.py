@@ -203,6 +203,10 @@ class SurgeryBox:
     def zero(self):
         return self._records('ZERO')
 
+    def set_home(self):
+        """Set the current position as the rewind stop until the MCU restarts."""
+        return self._records('HOME:SET')
+
     def set_light(self, on: bool):
         if not isinstance(on, bool):
             raise TypeError('on must be bool')
@@ -214,8 +218,8 @@ class SurgeryBox:
         return self._records('BRAKE:'+mode.upper())
 
     def set_brake_angle(self, angle: int):
-        if isinstance(angle, bool) or not isinstance(angle, int) or not 50 <= angle <= 180:
-            raise ValueError('Angle must be integer 50..180; firmware also limits each step to 5 degrees')
+        if isinstance(angle, bool) or not isinstance(angle, int) or not 30 <= angle <= 180:
+            raise ValueError('Angle must be integer 30..180; firmware also limits each step to 5 degrees')
         return self._records('BRAKE:ANGLE:'+str(angle))
 
     def mark_endpoint(self, endpoint: str, *, motor_power_isolated: bool):

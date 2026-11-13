@@ -1,17 +1,17 @@
-# SurgeryBox V3 · 3.1.0
+# SurgeryBox V3 · 3.1.6
 
-第三代硬件接口、Python SDK与桌面测试端。当前主板运行**3.1.0 / protocol=8**，通过USB串口接上位机。
+第三代硬件接口、Python SDK与桌面测试端。当前主板运行**3.1.6 / protocol=8**，通过USB串口接上位机。
 
 | 入口 | 用途 |
 |---|---|
 | [交接说明](docs/AI-HANDOFF.md) | 接手者先读：当前行为、验证结果和剩余问题 |
 | [硬件接口](docs/v3-hardware-api.md) | 接线、SDK、报文与回卷状态机 |
 | [测试端说明](docs/v3-test-console.md) | 编码器、刹车、电机、灯的功能测试 |
-| [发布包](releases/surgerybox-v3-3.1.0-20261109.zip) | 固件镜像/源码、SDK、测试端、文档与验证证据 |
+| [发布包](https://github.com/hEr0bR1ne/surgeryBoxProject-next/releases/tag/v3.1.6) | 固件镜像/源码、SDK、测试端、文档与验证证据 |
 | [固件源码](firmware/v3) | 当前PlatformIO工程，WEMOS D1 R1 |
 
-上电位置自动作为收回零点，无人工两端标定、无拉出上限、无提前停车死区；到零关闭回卷后释放摩擦轮1秒。
-舵机75°/秒缓动，目标180°/120°/50°。编码器MT6701 14位I2C，灯D3高有效。
+上电位置自动作为回卷零点，也可用测试端「设为回卷零点」更改本次目标。D8 回卷到零后停止，再由 D7 释放摩擦轮 1 秒。
+舵机75°/秒缓动，目标180°/90°/30°。编码器MT6701 14位I2C，灯D3高有效。
 
 ```powershell
 python -m pip install -r host_sdk/requirements-gui.txt
@@ -19,7 +19,7 @@ python tools/v3_test_client.py --port COM4
 ```
 
 Windows也可双击`tools/StartHardwareTest.cmd`。SDK示例见[host_sdk/example.py](host_sdk/example.py)。
-本机已完成烧录、26项SDK/GUI测试与用户回卷测试。首次舵机启用仍记录过一次串口error5，回零存在少量惯性超零，详情见交接说明。
+本机已完成烧录校验、28 项 SDK/GUI 测试及手动零点回卷实测。历史串口问题及实测结果见交接说明。
 **根目录旧src/、include/和platformio.ini属于历史入口；当前固件只构建firmware/v3，禁止误烧旧主程序。**
 
 <details>

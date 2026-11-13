@@ -9,10 +9,11 @@ with SurgeryBox('COM4') as box:
     # UI actions (do not uncomment all of these as an automatic startup sequence):
     # box.set_light(True)
     # box.set_brake('release')  # 180 degrees
-    # box.set_brake('weak')     # 120 degrees
-    # box.set_brake('lock')     # 50 degrees
+    # box.set_brake('weak')     # 90 degrees
+    # box.set_brake('lock')     # 30 degrees
     # box.set_brake('off')      # stops motor and disables servo pulses
-    # box.zero()               # display zero only, leaves power-on home intact
+    # box.zero()               # display zero only, leaves rewind target intact
+    # box.set_home()           # use current position as the rewind target
 
     # Power-on position is captured by the MCU; no endpoint marking is needed.
     # token = box.wind()       # brake release -> rewind -> friction release 1s

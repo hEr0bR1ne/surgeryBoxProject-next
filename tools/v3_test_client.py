@@ -76,7 +76,7 @@ class Backend(QObject):
                             continue
                         elif self.client:
                             methods={'light':self.client.set_light,'brake':self.client.set_brake,
-                                'angle':self.client.set_brake_angle,'zero':self.client.zero,
+                                'angle':self.client.set_brake_angle,'set_home':self.client.set_home,
                                 'stream':self.client.stream,
                                 'info':self.client.info,'bus':lambda:self.client.request('BUS?'),
                                 'wind':self.client.wind,'release':self.client.release,'finish':self.client.finish}
@@ -149,27 +149,28 @@ class TestConsole(QWidget):
         self.link=QLabel('未连接 · 需要固件3.1 / protocol=8');self.link.setWordWrap(True);row.addWidget(self.link,1);root.addLayout(row)
         tabs=QTabWidget();root.addWidget(tabs,1)
         scroll=QScrollArea();scroll.setWidgetResizable(True);page=QWidget();layout=QVBoxLayout(page);scroll.setWidget(page);tabs.addTab(scroll,'功能测试')
-        self.position=QLabel('相对位置：—');self.position.setStyleSheet('font-size:29px;font-weight:600;');layout.addWidget(self.position)
+        self.position=QLabel('距回卷零点：—');self.position.setStyleSheet('font-size:29px;font-weight:600;');layout.addWidget(self.position)
+        self.display_position = QLabel('显示相对计数：—');layout.addWidget(self.display_position)
         self.encoder_info=QLabel('编码器：等待有效数据');layout.addWidget(self.encoder_info)
-        row=QHBoxLayout();self.zero=QPushButton('当前位置显示归零');self.zero.clicked.connect(lambda:self.act('zero'));row.addWidget(self.zero)
+        row=QHBoxLayout();self.zero=QPushButton('设为回卷零点');self.zero.clicked.connect(lambda:self.act('set_home'));row.addWidget(self.zero)
         self.stream=QCheckBox('开启10Hz位置上报');self.stream.toggled.connect(lambda v:self.act('stream',v));row.addWidget(self.stream)
-        row.addWidget(QLabel('每圈16384计数；显示归零不改变上电零点'));layout.addLayout(row)
+        row.addWidget(QLabel('将线放到希望回卷停止的位置，再设零点'));layout.addLayout(row)
         row=QHBoxLayout();brake=QGroupBox('舵机刹车');b=QVBoxLayout(brake)
         self.brake_status=QLabel('指令角度：—');b.addWidget(self.brake_status)
         buttons=QHBoxLayout();self.brake_buttons=[]
-        for label,mode in [('释放180°','release'),('弱阻尼120°','weak'),('锁紧50°','lock'),('停止脉冲','off')]:
+        for label,mode in [('释放180°','release'),('弱阻尼90°','weak'),('锁紧30°','lock'),('停止脉冲','off')]:
             button=QPushButton(label);button.clicked.connect(lambda checked=False,m=mode:self.act('brake',m));buttons.addWidget(button);self.brake_buttons.append(button)
-        b.addLayout(buttons);micro=QHBoxLayout();self.angle=QSpinBox();self.angle.setRange(50,180);self.angle.setValue(180);micro.addWidget(self.angle)
+        b.addLayout(buttons);micro=QHBoxLayout();self.angle=QSpinBox();self.angle.setRange(30,180);self.angle.setValue(180);micro.addWidget(self.angle)
         self.apply_angle=QPushButton('设置角度（单次≤5°）');self.apply_angle.clicked.connect(lambda:self.act('angle',self.angle.value()));micro.addWidget(self.apply_angle);b.addLayout(micro);row.addWidget(brake)
         lamp=QGroupBox('D3血迹灯');l=QVBoxLayout(lamp);self.lamp_status=QLabel('D3：—');l.addWidget(self.lamp_status)
         self.light_on=QPushButton('开灯 / D3高');self.light_off=QPushButton('关灯 / D3低')
         self.light_on.clicked.connect(lambda:self.act('light',True));self.light_off.clicked.connect(lambda:self.act('light',False));l.addWidget(self.light_on);l.addWidget(self.light_off);row.addWidget(lamp);layout.addLayout(row)
-        group=QGroupBox('上电自动零点');g=QVBoxLayout(group)
-        note=QLabel('主板上电后的第一个有效编码器位置自动记为收回零点。无需登记两端；拉出距离不限，回卷到零点即关闭电机，再释放摩擦轮1秒。显示归零不会移动收回零点。');note.setWordWrap(True);g.addWidget(note)
-        self.travel=QLabel('上电零点：等待读取');g.addWidget(self.travel);layout.addWidget(group)
+        group=QGroupBox('回卷零点');g=QVBoxLayout(group)
+        note=QLabel('上电时自动取零点，也可以手动设置。手动设置会同步清零显示计数，生效到主板重启。');note.setWordWrap(True);g.addWidget(note)
+        self.travel=QLabel('回卷零点：等待读取');g.addWidget(self.travel);layout.addWidget(group)
         group=QGroupBox('电机自动回卷与摩擦轮释放');m=QVBoxLayout(group)
         self.powered=QCheckBox('确认：执行器供电已恢复，机构可运动');self.powered.toggled.connect(self.power_mode);m.addWidget(self.powered)
-        note=QLabel('回卷：刹车缓动释放180°并等待稳定→方向2返回上电零点→停止→方向1释放1秒→停止。无提前停车死区；连续回卷上限120秒，保留500ms无进展、250ms心跳和编码器失效停机。');note.setWordWrap(True);m.addWidget(note)
+        note=QLabel('舵机释放后，D8 收线到回卷零点，随后 D7 释放摩擦轮一秒。');note.setWordWrap(True);m.addWidget(note)
         motors=QHBoxLayout();self.wind=QPushButton('开始自动回卷');self.release=QPushButton('只释放摩擦轮1秒');self.finish=QPushButton('正常结束回卷并释放')
         self.wind.clicked.connect(lambda:self.act('wind'));self.release.clicked.connect(lambda:self.act('release'));self.finish.clicked.connect(lambda:self.act('finish'))
         for button in (self.wind,self.release,self.finish):button.setMinimumHeight(45);motors.addWidget(button)
@@ -205,20 +206,28 @@ class TestConsole(QWidget):
     def on_disconnected(self,message):
         self.online=False;self.pending=False;self.emergency_wait=False;self.owned_token=None;self.latest={};self.last_state=0
         self.powered.setChecked(False);self.connect_button.setText('连接');self.link.setText(message);self.controls()
-        self.position.setText('相对位置：未连接');self.encoder_info.setText('编码器：无有效连接')
+        self.position.setText('距回卷零点：未连接');self.display_position.setText('显示相对计数：—');self.encoder_info.setText('编码器：无有效连接')
+        self.travel.setText('回卷零点：—')
 
     def on_state(self,data):
         if self.closing:return
         self.latest=data;self.last_state=time.monotonic();self.raw.setPlainText(json.dumps(data,ensure_ascii=False,indent=2))
         e=data.get('I2CENC',{});valid=e.get('valid')==e.get('relative_valid')==1
         ticks=e.get('relative_ticks',0)
-        self.position.setText(f'相对位置：{ticks:+d} 计数   {ticks/16384:+.4f} 圈' if valid else '相对位置：无效 / 等待恢复')
+        self.display_position.setText(f'显示相对计数：{ticks:+d} 计数' if valid else '显示相对计数：无效')
         self.encoder_info.setText(f'单圈角度 {e.get("angle_deg","—")}°   地址 {e.get("addr","—")}   累计错误 {e.get("errors","—")}   样本年龄 {e.get("age_ms","—")} ms')
         b=data.get('BRAKE',{});self.brake_status.setText(f'脉冲 {"开启" if b.get("enabled") else "关闭"}   指令 {b.get("angle","—")}° → 目标 {b.get("target",b.get("angle","—"))}°   {"缓动中" if b.get("moving") else ""}（非实测）')
         if not self.angle.hasFocus():self.angle.setValue(int(b.get('angle',180)))
         self.lamp_status.setText('D3引脚：'+str(data.get('LIGHT',{}).get('state','—'))+'（实体灯需观察）')
         m=data.get('MOTORPROBE',{});j=data.get('JOB',{})
-        self.travel.setText(f'上电零点 {m.get("home","—")}   当前位置 {m.get("pos","—")}   零点{"有效" if m.get("home_valid") else "无效"} · 无拉出上限 / 无提前停车死区')
+        home, pos = m.get('home'), m.get('pos')
+        if valid and m.get('home_valid') and isinstance(home, int) and isinstance(pos, int):
+            distance = pos - home
+            self.position.setText(f'距回卷零点：{distance:+d} 计数   {distance/16384:+.4f} 圈')
+        else:
+            self.position.setText('距回卷零点：无效 / 等待恢复')
+        source = '手动设置' if m.get('home_source') == 'manual' else '上电记录'
+        self.travel.setText(f'回卷零点 {m.get("home","—")}（{source}）   回卷用位置 {m.get("pos","—")}   零点{"有效" if m.get("home_valid") else "无效"} · 无提前停车死区')
         reason=m.get('reason','—');self.motor_status.setText(('刹车释放准备中' if j.get('preparing') else REASONS.get(reason,reason))+f'   token={j.get("token",0)}')
         self.link.setText('已连接 · '+str(self.identity.get('boot','')));self.controls()
 
@@ -233,14 +242,14 @@ class TestConsole(QWidget):
         self.brake_buttons[-1].setEnabled(fresh and not self.pending)
         self.angle.setEnabled(idle);self.apply_angle.setEnabled(idle)
         self.light_on.setEnabled(trusted and not self.pending);self.light_off.setEnabled(fresh and not self.pending)
-        self.zero.setEnabled(idle and e.get('valid')==1);self.stream.setEnabled(fresh and not self.pending)
+        self.zero.setEnabled(idle and enc and m.get('home_settable')==1);self.stream.setEnabled(fresh and not self.pending)
         ready=enc and m.get('home_valid')==1
         self.wind.setEnabled(bool(idle and ready and self.powered.isChecked()));self.release.setEnabled(self.wind.isEnabled())
         self.finish.setEnabled(bool(fresh and not self.pending and self.owned_token and self.motor_busy() and not m.get('releasing')))
         self.refresh.setEnabled(self.online and not self.pending);self.info_button.setEnabled(self.refresh.isEnabled());self.bus_button.setEnabled(self.refresh.isEnabled());self.port.setEnabled(not self.online and not self.pending)
         self.connect_button.setEnabled(not self.pending or self.online);self.stop_button.setEnabled(self.online);self.safe_button.setEnabled(self.online)
         if self.online and not fresh:
-            self.position.setText('相对位置：数据过期');self.link.setText('等待实时数据，动作按钮已禁用')
+            self.position.setText('距回卷零点：数据过期');self.display_position.setText('显示相对计数：数据过期');self.link.setText('等待实时数据，动作按钮已禁用')
 
     def power_mode(self,checked):
         if not checked and self.motor_busy():self.emergency(True)
@@ -249,6 +258,7 @@ class TestConsole(QWidget):
     def act(self,name,*args):
         if not self.fresh() or self.pending:return
         if name in ('wind','release') and not self.wind.isEnabled():return
+        if name == 'set_home' and not self.zero.isEnabled():return
         self.pending=True;self.message.setText('执行中：'+name);self.log('ACTION '+name+' '+repr(args));self.backend.submit(name,*args);self.controls()
 
     def on_done(self,name,result):
@@ -258,7 +268,7 @@ class TestConsole(QWidget):
         if name in ('safe','stop','motor_complete'):self.owned_token=None
         self.history.append({'time':datetime.now().isoformat(),'action':name,'result':result})
         labels={'light':'灯指令已确认','brake':'舵机指令已确认','angle':'角度指令已确认',
-            'zero':'显示相对零已设置','stream':'位置上报设置已确认','wind':'回卷任务已接受，等待执行结果','release':'释放任务已接受，等待执行结果',
+            'set_home':'当前位置已设为回卷零点','stream':'位置上报设置已确认','wind':'回卷任务已接受，等待执行结果','release':'释放任务已接受，等待执行结果',
             'finish':'已请求正常结束并释放','motor_complete':'电机流程完成','safe':'已确认：电机关闭、灯灭、舵机无脉冲','stop':'电机停止已确认',
             'refresh':'状态已刷新','info':'设备信息已写入日志和测试记录','bus':'I²C诊断结果：'+str(result)}
         self.message.setText('操作失败：'+str(result['error']) if isinstance(result,dict) and 'error' in result else labels.get(name,name+'已完成'))

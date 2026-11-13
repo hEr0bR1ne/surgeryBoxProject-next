@@ -5,7 +5,8 @@ from pathlib import Path
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '3.1.0'
+VERSION = '3.1.6'
+RELEASE_DATE = '20261113'
 RELEASE = ROOT / 'releases' / f'surgerybox-v3-{VERSION}'
 
 
@@ -28,7 +29,6 @@ def main():
         ROOT / 'docs/AI-HANDOFF.md', ROOT / 'docs/v3-hardware-api.md',
         ROOT / 'docs/v3-test-console.md', ROOT / 'docs/v3-hardware-validation.md',
         ROOT / 'docs/v3-release-notes.md',
-        *sorted((ROOT / 'docs/archive').glob('*before-v3-release-20261109.md')),
         *sorted(p for p in RELEASE.iterdir() if p.is_file()),
     ]
     entries = {p.relative_to(ROOT).as_posix(): p.read_bytes() for p in paths}
@@ -37,13 +37,13 @@ def main():
         '先读[交接说明](docs/AI-HANDOFF.md)和[硬件接口](docs/v3-hardware-api.md)。\n\n'
         '安装：`python -m pip install -r host_sdk/requirements-gui.txt`\n\n'
         '测试端：`python tools/v3_test_client.py --port COM4`；Windows可双击`tools/StartHardwareTest.cmd`。\n\n'
-        '上电位置自动作回卷零点，无人工两端标定、无拉出上限、无提前停车死区；舵机75°/秒。\n\n'
-        '固件源码在firmware/v3；已烧录镜像和现场证据在releases/surgerybox-v3-3.1.0。\n'
+        '上电自动设零点，也可手动设置实际回卷零点。D8 回卷，D7 释放；舵机目标 180°/90°/30°。\n\n'
+        f'固件源码在 firmware/v3。已烧录镜像和现场证据在 releases/surgerybox-v3-{VERSION}。\n'
         '包内SHA256.json逐文件列出校验值；剩余问题见交接说明。\n'
     ).encode('utf-8')
     manifest = {name: hashlib.sha256(data).hexdigest() for name, data in entries.items()}
     entries['SHA256.json'] = json.dumps(manifest, indent=2).encode('utf-8')
-    output = ROOT / 'releases' / f'surgerybox-v3-{VERSION}-20261109.zip'
+    output = ROOT / 'releases' / f'surgerybox-v3-{VERSION}-{RELEASE_DATE}.zip'
     with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as package:
         for name, data in entries.items():
             package.writestr(name, data)

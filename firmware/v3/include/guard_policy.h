@@ -6,15 +6,23 @@ constexpr uint32_t staleMs=30, holdLeaseMs=250, holdNoProgressMs=500;
 constexpr uint32_t holdDurationMs=120000;
 constexpr uint32_t releaseMs=1000, releaseWaitMs=50;
 constexpr int releaseDelta=128;
-// Direction 2 increases encoder counts on this verified assembly.
-constexpr int rewindSign=1;
+// Pulling out increases counts in the current winding orientation.
+constexpr int rewindSign=-1;
+constexpr int64_t rewindProgress(int64_t position, int64_t reference) {
+    return rewindSign * (position - reference);
+}
 struct HomeReference {
     bool captured=false, valid=false;
     int64_t position=0;
+    bool manual=false;
     constexpr void capture(int64_t p) {
         if (!captured) { position=p; captured=true; valid=true; }
     }
     constexpr void invalidate() { valid=false; }
+    constexpr void setHere(int64_t p) {
+        position=p;
+        captured=valid=manual=true;
+    }
 };
 constexpr bool reachedHome(int64_t position,int64_t home,int sign=rewindSign) {
     return sign>0 ? position>=home : position<=home;

@@ -1,19 +1,20 @@
 #include "../include/guard_policy.h"
 #include "../include/brake_ramp.h"
 using namespace probe_policy;
-static_assert(evaluateHome(true,true,-1,0,-1,10,0,0)==Stop::None,"No early-stop deadzone even one tick from zero");
-static_assert(evaluateHome(true,true,0,0,-1,10,0,0)==Stop::Home,"Exact zero ends rewind");
-static_assert(evaluateHome(true,true,10,0,-1,10,0,0)==Stop::Home,"A sample crossing zero ends rewind");
-static_assert(evaluateHome(true,true,-1000000,0,-1000000,10,0,0)==Stop::None,"No extension-distance cap");
-static_assert(evaluateHome(true,true,-300,0,-300,16000,0,0)==Stop::None,"Rewind may exceed old 15-second cap");
-static_assert(evaluateHome(true,true,-100,0,-100,120000,0,0)==Stop::Timeout,"Hard run watchdog remains");
-static_assert(evaluateHome(false,true,-1,0,-1,10,0,0)==Stop::Encoder,"Lost feedback stops drive");
-static_assert(evaluateHome(true,false,-1,0,-1,10,0,0)==Stop::Encoder,"Lost home never starts drive");
-static_assert(evaluateHome(true,true,-1,0,-1,10,0,250)==Stop::Lease,"Lost lease stops drive");
+static_assert(evaluateHome(true,true,1,0,1,10,0,0)==Stop::None,"No early-stop deadzone even one tick from zero");
+static_assert(evaluateHome(true,true,0,0,1,10,0,0)==Stop::Home,"Exact zero ends rewind");
+static_assert(evaluateHome(true,true,-10,0,1,10,0,0)==Stop::Home,"A sample crossing zero ends rewind");
+static_assert(evaluateHome(true,true,1000000,0,1000000,10,0,0)==Stop::None,"No extension-distance cap");
+static_assert(evaluateHome(true,true,300,0,300,16000,0,0)==Stop::None,"Rewind may exceed old 15-second cap");
+static_assert(evaluateHome(true,true,100,0,100,120000,0,0)==Stop::Timeout,"Hard run watchdog remains");
+static_assert(evaluateHome(false,true,1,0,1,10,0,0)==Stop::Encoder,"Lost feedback stops drive");
+static_assert(evaluateHome(true,false,1,0,1,10,0,0)==Stop::Encoder,"Lost home never starts drive");
+static_assert(evaluateHome(true,true,1,0,1,10,0,250)==Stop::Lease,"Lost lease stops drive");
 static_assert(evaluateHome(true,true,0,0,0,10,0,250)==Stop::Lease,"Lost lease at zero never starts release");
-static_assert(evaluateHome(true,true,-100,0,-100,500,500,0)==Stop::NoProgress,"Stall still stops");
-static_assert(evaluateHome(true,true,-108,0,-100,100,0,0)==Stop::WrongWay,"Reverse from peak stops");
-static_assert(reachedHome(0,0) && !reachedHome(-1,0) && reachedHome(-1,0,-1),"Direction-aware zero crossing");
+static_assert(evaluateHome(true,true,100,0,100,500,500,0)==Stop::NoProgress,"Stall still stops");
+static_assert(evaluateHome(true,true,108,0,100,100,0,0)==Stop::WrongWay,"Reverse from peak stops");
+static_assert(reachedHome(0,0) && !reachedHome(1,0) && reachedHome(-1,0) && !reachedHome(-1,0,1),"Direction-aware zero crossing");
+static_assert(rewindProgress(96,100)==4 && rewindProgress(108,100)==-8,"Progress follows the configured rewind direction");
 static_assert(releaseAction(true,0,0,0,49,true)==Release::Continue,"Break before reversing");
 static_assert(releaseAction(true,0,0,0,50,true)==Release::Drive,"50ms break");
 static_assert(releaseAction(true,-1000000,-1000000,0,50,true)==Release::Drive,"Release has no extension limit");
@@ -29,6 +30,15 @@ constexpr bool referenceChecks() {
     return h.captured && !h.valid && h.position==0;
 }
 static_assert(referenceChecks(),"Capture once; faults/reconnection never silently relocate home");
+constexpr bool manualHomeChecks() {
+    HomeReference h;
+    h.capture(0);
+    h.setHere(-13763);
+    h.capture(0);
+    return h.valid && h.manual && h.position==-13763 &&
+        !reachedHome(-11119,h.position) && reachedHome(-13763,h.position);
+}
+static_assert(manualHomeChecks(),"An explicit new home controls the next rewind");
 constexpr bool idChecks() {
     uint32_t id=0;
     return parseId("2147483647",id) && id==2147483647 && !parseId("2147483648",id) &&

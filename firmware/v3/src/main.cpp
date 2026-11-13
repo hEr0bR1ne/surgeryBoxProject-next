@@ -46,6 +46,8 @@ public:
 
 static Servo brake;
 static BrakeRamp brakeRamp;
+static constexpr int brakeWeakAngle = 90;
+static constexpr int brakeLockAngle = 30;
 static uint32_t lastContact=0, lastMotion=0;
 static uint32_t lastDiscovery=0;
 static uint32_t busClearCount=0;
@@ -66,8 +68,8 @@ static void systemReport() {
         static_cast<unsigned long>(millis()),ESP.getFreeHeap(),static_cast<unsigned long>(droppedFrames));
 }
 static void brakeReport() {
-    replies.printf("BRAKE:enabled=%u,angle=%d,release=180,weak=120,lock=50,settled=%u,measured=0,target=%d,moving=%u,step_ms=20,speed_deg_s=75",
-        brake.attached(),brakeRamp.current,brake.attached() && brakeRamp.settled(millis()),
+    replies.printf("BRAKE:enabled=%u,angle=%d,release=180,weak=%d,lock=%d,settled=%u,measured=0,target=%d,moving=%u,step_ms=20,speed_deg_s=75",
+        brake.attached(),brakeRamp.current,brakeWeakAngle,brakeLockAngle,brake.attached() && brakeRamp.settled(millis()),
         brakeRamp.target,brake.attached() && brakeRamp.moving());
 }
 static void encoderReport() { report(); }
@@ -125,7 +127,7 @@ static bool parseToken(const String& cmd,size_t offset,uint32_t& token) {
 }
 static void dispatch(const String& cmd) {
     if (cmd=="HELLO") {
-        replies.printf("HELLO:product=SurgeryBoxV3,api=1,firmware=3.1.0,protocol=8,boot=%s,transport=usb_serial,baud=115200",bootId.c_str());
+        replies.printf("HELLO:product=SurgeryBoxV3,api=1,firmware=3.1.6,protocol=8,boot=%s,transport=usb_serial,baud=115200",bootId.c_str());
         return;
     }
     if (cmd=="INFO?") {
@@ -167,14 +169,21 @@ static void dispatch(const String& cmd) {
     }
     if (busy()) { replies.println("ERROR: motor_busy_use_STOP"); return; }
     if (cmd=="BRAKE:RELEASE" || cmd=="BRAKE:WEAK" || cmd=="BRAKE:LOCK") {
-        setBrake(cmd=="BRAKE:RELEASE" ? 180 : cmd=="BRAKE:WEAK" ? 120 : 50); brakeReport(); return;
+        setBrake(cmd=="BRAKE:RELEASE" ? 180 : cmd=="BRAKE:WEAK" ? brakeWeakAngle : brakeLockAngle); brakeReport(); return;
     }
     if (cmd.startsWith("BRAKE:ANGLE:")) {
         uint32_t angle=0;
-        if (!parseToken(cmd,12,angle) || angle<50 || angle>180 || abs(int(angle)-brakeRamp.current)>5) {
-            replies.println("ERROR: angle_50_to_180_max_step_5"); return;
+        if (!parseToken(cmd,12,angle) || angle<brakeLockAngle || angle>180 || abs(int(angle)-brakeRamp.current)>5) {
+            replies.println("ERROR: angle_30_to_180_max_step_5"); return;
         }
         setBrake(angle); brakeReport(); return;
+    }
+    if (cmd=="HOME:SET") {
+        sample();
+        if (!probeFresh()) { replies.println("ERROR: encoder_tracking_invalid_restart_required"); return; }
+        probeHome.setHere(physicalTicks);
+        relativeTicks=0;
+        encoderReport(); motorReport(); return;
     }
     if (cmd=="ZERO") {
         sample();

@@ -1,0 +1,24 @@
+{
+  "firmware": "3.1.6",
+  "api": 1,
+  "protocol": 8,
+  "date": "2026-11-13",
+  "timezone": "Asia/Shanghai",
+  "binary_bytes": 290592,
+  "sha256": "34c39ab1999c37cf3499ff400c4cfbaf19dd2fd7410d2bf01633b32b81b7e351",
+  "upload_hash_verified": true,
+  "platformio_build": "PASS",
+  "sdk_tests": 13,
+  "gui_tests": 15,
+  "operator_test": {
+    "boot": "15e2c4-fb0118e",
+    "motor_token": 793650823,
+    "home_source": "manual",
+    "initial_pos": 11913,
+    "home": 0,
+    "final_pos": 0,
+    "reason": "release_complete",
+    "final_D7": 0,
+    "final_D8": 0
+  }
+}
